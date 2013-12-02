@@ -5,6 +5,30 @@
     android:orientation="vertical" >
 
     <Button
+        android:id="@+id/main_more_content_search"
+        style="@style/MenubarMenuButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
+        android:text="@string/Search" />
+
+    <Button
+        android:id="@+id/main_more_content_myfavorite"
+        style="@style/MenubarMenuButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
+        android:text="@string/My_Favorite" />
+
+    <Button
+        android:id="@+id/main_more_content_hotnews"
+        style="@style/MenubarMenuButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
+        android:text="@string/Hot_News" />
+
+    <Button
         android:id="@+id/main_more_content_settings"
         style="@style/MenubarMenuButton"
         android:layout_width="fill_parent"

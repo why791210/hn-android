@@ -64,6 +64,7 @@
         </activity>
         <activity android:name=".login.LoginActivity_" android:label="@string/credentials" android:theme="@android:style/Theme.Dialog">
         </activity>
+        <activity android:name="searchActivity_"></activity>
     </application>
 
 </manifest>

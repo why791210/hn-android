@@ -165,6 +165,15 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
                 mActionbarMore.setSelected(false);
             }
         });
+        //search
+        Button searchButton = (Button) moreContentView.findViewById(R.id.main_more_content_about);
+        searchButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, AboutActivity_.class));
+                popupWindow.dismiss();
+            }
+        });
 
         Button settingsButton = (Button) moreContentView.findViewById(R.id.main_more_content_settings);
         settingsButton.setOnClickListener(new OnClickListener() {
@@ -175,11 +184,11 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
             }
         });
 
-        Button aboutButton = (Button) moreContentView.findViewById(R.id.main_more_content_about);
+        Button aboutButton = (Button) moreContentView.findViewById(R.id.main_more_content_search);
         aboutButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, AboutActivity_.class));
+                startActivity(new Intent(MainActivity.this, searchActivity_.class));
                 popupWindow.dismiss();
             }
         });
