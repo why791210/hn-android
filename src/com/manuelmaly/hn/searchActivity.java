@@ -2,12 +2,9 @@ package com.manuelmaly.hn;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.graphics.Typeface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -51,6 +48,7 @@ public class searchActivity extends Activity implements ITaskFinishedHandler<HNF
     void searchButtonClicked() {
     	String searchString = mSearchName.getText().toString();
     	
+    	// check empty.
     	if(TextUtils.isEmpty(searchString))
     	{
     		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -70,7 +68,34 @@ public class searchActivity extends Activity implements ITaskFinishedHandler<HNF
     // finish handler # Calvin Chang
     @Override
     public void onTaskFinished(int taskCode, TaskResultCode code, HNFeed result, Object tag){
-    	
-    	
+    	 
+    	//Bundle bundle = this.getIntent().getExtras();
+
+        //HNFeed feed = (HNFeed) bundle.getSerializable("HNFeed");
+        //boolean isSearchResult = (boolean) bundle.getBoolean("IsSearchResult");
+        
+    	if(result.getPosts().size() >0)
+    	{
+    		//feed.clearPost();
+    		//feed.addPosts(result.getPosts());
+    		//isSearchResult = true;
+    		
+    		Intent resultIntent = new Intent();
+    		resultIntent.putExtra("HNFeed", result);
+    		resultIntent.putExtra("IsSearchResult", true);
+    		setResult(Activity.RESULT_OK, resultIntent); 
+    		
+    		finish();
+    	}
+    	else{
+    		
+    		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        	builder
+        	.setTitle("Info")
+        	.setMessage("Can not find related articles.")
+        	.setIcon(android.R.drawable.ic_dialog_info)
+        	.setNegativeButton("OK", null)						//Do nothing on no
+        	.show();		
+    	}
     }
 }

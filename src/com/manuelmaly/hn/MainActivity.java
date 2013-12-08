@@ -3,6 +3,7 @@ package com.manuelmaly.hn;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -89,10 +90,12 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
     private static final int TASKCODE_LOAD_FEED = 10;
     private static final int TASKCODE_LOAD_MORE_POSTS = 20;
     private static final int TASKCODE_VOTE = 100;
-
+    private static final int ACTIVITY_IDENTIFIER = 1;
+    
     private static final String LIST_STATE = "listState";
     private Parcelable mListState = null;
-
+    // #Calvin Chang
+    private boolean mIsSearchResult = false;
     @AfterViews
     public void init() {
         mFeed = new HNFeed(new ArrayList<HNPost>(), null, "");
@@ -127,6 +130,13 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
         // refresh if font size changed
         if (refreshFontSizes())
         	mPostsListAdapter.notifyDataSetChanged();
+        
+        // load search result
+        if(mIsSearchResult)
+        {
+        	showFeed(mFeed);
+        	mIsSearchResult = false;
+        }
         
         // restore vertical scrolling position if applicable
         if (mListState != null)
@@ -188,14 +198,42 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
         aboutButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, searchActivity_.class));
+            	//mFeed
+            	Intent intent = new Intent();
+                intent.setClass(MainActivity.this, searchActivity_.class);
+            	
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("HNFeed", mFeed);
+                bundle.putBoolean("IsSearchResult", mIsSearchResult);
+                intent.putExtras(bundle);
+                
+                startActivityForResult(intent, ACTIVITY_IDENTIFIER);
                 popupWindow.dismiss();
             }
         });
 
         popupWindow.update(moreContentView.getMeasuredWidth(), moreContentView.getMeasuredHeight());
     }
-
+    
+    @Override 
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {	
+      super.onActivityResult(requestCode, resultCode, data); 
+      //Bundle bundle = this.getIntent().getExtras();
+      
+      switch(requestCode) { 
+        case (ACTIVITY_IDENTIFIER) : { 
+          if (resultCode == Activity.RESULT_OK) { 
+        	  mIsSearchResult = (boolean)data.getBooleanExtra("IsSearchResult", false);
+        	  mFeed.clearPost();
+        	  mFeed.addPosts(((HNFeed)data.getSerializableExtra("HNFeed")).getPosts());
+          //String newText = data.getStringExtra(PUBLIC_STATIC_STRING_IDENTIFIER);
+          // TODO Update your TextView.
+          } 
+          break; 
+        } 
+      } 
+    }
+    
     @Override
     public void onTaskFinished(int taskCode, TaskResultCode code, HNFeed result, Object tag) {
         if (taskCode == TASKCODE_LOAD_FEED) {
