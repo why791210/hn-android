@@ -11,6 +11,7 @@ public class HNFeedTaskSearch extends HNFeedTaskBase {
 
 	//private HNFeed mFeedToAttachResultsTo;
 	private static HNFeedTaskSearch instance;
+	private static String mSearchString = null;
 	public static final String BROADCAST_INTENT_ID = "HNFeedSearch";
     private static HNFeedTaskSearch getInstance(int taskCode) {
         synchronized (HNFeedTaskBase.class) {
@@ -25,9 +26,10 @@ public class HNFeedTaskSearch extends HNFeedTaskBase {
         mHeaderType = IAPICommand.HeaderType.JSON;
     }
     
-    public static void start(Activity activity, ITaskFinishedHandler<HNFeed> finishedHandler, int taskCode) {
+    public static void start(Activity activity, ITaskFinishedHandler<HNFeed> finishedHandler, int taskCode, String searchString) {
     	
     	HNFeedTaskSearch task = getInstance(taskCode);
+    	mSearchString = searchString;
         task.setOnFinishedHandler(activity, finishedHandler, HNFeed.class);
         if (!task.isRunning())
             task.startInBackground();
@@ -45,7 +47,7 @@ public class HNFeedTaskSearch extends HNFeedTaskBase {
     	
 		HashMap<String, String> param =  new HashMap<String, String>();
 		
-		param.put("q", "facebook");
+		param.put("q", mSearchString);
 		param.put("weights[title]", "1.1");
 		param.put("weights[text]", "0.7");
 		param.put("weights[domain]", "2.0");

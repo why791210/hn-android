@@ -1,8 +1,10 @@
 package com.manuelmaly.hn;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -47,9 +49,21 @@ public class searchActivity extends Activity implements ITaskFinishedHandler<HNF
     
     @Click(R.id.searchbutton)
     void searchButtonClicked() {
-    	//String searchString = mSearchName.getText().toString();
+    	String searchString = mSearchName.getText().toString();
     	
-    	HNFeedTaskSearch.start(this, this, TASKCODE_SEARCH);
+    	if(TextUtils.isEmpty(searchString))
+    	{
+    		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        	builder
+        	.setTitle("Info")
+        	.setMessage("Please text the search string.")
+        	.setIcon(android.R.drawable.ic_dialog_info)
+        	.setNegativeButton("OK", null)						//Do nothing on no
+        	.show();
+    		return ;
+    	}
+    	
+    	HNFeedTaskSearch.start(this, this, TASKCODE_SEARCH, searchString);
     	
     }
     
