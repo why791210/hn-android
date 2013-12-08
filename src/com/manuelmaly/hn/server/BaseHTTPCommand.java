@@ -157,7 +157,8 @@ public abstract class BaseHTTPCommand<T extends Serializable> implements IAPICom
     protected HttpRequestBase createRequest() {
         switch (mType) {
             case GET:
-                return new HttpGet(getUrlWithParams());
+                //return new HttpGet(getUrlWithParams());
+            	return new HttpGet(getUrlWithParams());
             case PUT:
                 return new HttpPut(getUrlWithParams());
             case DELETE:

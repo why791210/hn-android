@@ -1,15 +1,17 @@
 package com.manuelmaly.hn.task;
+import java.util.HashMap;
+
 import com.manuelmaly.hn.model.HNFeed;
+import com.manuelmaly.hn.server.IAPICommand;
 
 import android.app.Activity;
 import android.content.Context;
 
 public class HNFeedTaskSearch extends HNFeedTaskBase {
 
-	private HNFeed mFeedToAttachResultsTo;
+	//private HNFeed mFeedToAttachResultsTo;
 	private static HNFeedTaskSearch instance;
 	public static final String BROADCAST_INTENT_ID = "HNFeedSearch";
-	
     private static HNFeedTaskSearch getInstance(int taskCode) {
         synchronized (HNFeedTaskBase.class) {
             if (instance == null)
@@ -20,31 +22,42 @@ public class HNFeedTaskSearch extends HNFeedTaskBase {
 	
     private HNFeedTaskSearch(int taskCode) {
         super(BROADCAST_INTENT_ID, taskCode);
+        mHeaderType = IAPICommand.HeaderType.JSON;
     }
     
-    public static void start(Activity activity, ITaskFinishedHandler<HNFeed> finishedHandler,
-            				 HNFeed feedToAttachResultsTo, int taskCode) {
+    public static void start(Activity activity, ITaskFinishedHandler<HNFeed> finishedHandler, int taskCode) {
     	
-    		HNFeedTaskSearch task = getInstance(taskCode);
-            task.setOnFinishedHandler(activity, finishedHandler, HNFeed.class);
-            task.setFeedToAttachResultsTo(feedToAttachResultsTo);
-            if (task.isRunning()){
-                task.cancel();
-            }
-            
+    	HNFeedTaskSearch task = getInstance(taskCode);
+        task.setOnFinishedHandler(activity, finishedHandler, HNFeed.class);
+        if (!task.isRunning())
             task.startInBackground();
-        }
+    	
+    }
     
 	@Override
 	protected String getFeedURL() {
 		// test url
-		return "http://api.thriftdb.com/api.hnsearch.com/items/_search?" +
-			    "q=facebook&weights[title]=1.1&weights[text]=0.7&weights[domain]=2.0&" +
-			    "weights[username]=0.1&weights[type]=0.0&boosts[fields][points]=0.15&" +
-			    "boosts[fields][num_comments]=0.15&" +
-			    "boosts[functions][pow(2,div(div(ms(create_ts,NOW),3600000),72))]=200.0&" +
-			    "pretty_print=true";
+		return "http://api.thriftdb.com/api.hnsearch.com/items/_search";
 	}
+	
+	@Override
+    protected HashMap<String, String> getFeedParam(){
+    	
+		HashMap<String, String> param =  new HashMap<String, String>();
+		
+		param.put("q", "facebook");
+		param.put("weights[title]", "1.1");
+		param.put("weights[text]", "0.7");
+		param.put("weights[domain]", "2.0");
+		param.put("weights[username]", "0.1");
+		param.put("weights[type]", "0.0");
+		param.put("boosts[fields][points]", "0.15");
+		param.put("boosts[fields][num_comments]", "0.15");
+		param.put("boosts[functions][pow(2,div(div(ms(create_ts,NOW),3600000),72))]", "200.00");
+		param.put("pretty_print", "true");
+		
+    	return param;
+    }
 	
     public static void stopCurrent(Context applicationContext) {
         getInstance(0).cancel();
@@ -53,8 +66,8 @@ public class HNFeedTaskSearch extends HNFeedTaskBase {
     public static boolean isRunning(Context applicationContext) {
         return getInstance(0).isRunning();
     }
-    
+   /* 
     public void setFeedToAttachResultsTo(HNFeed feedToAttachResultsTo) {
         this.mFeedToAttachResultsTo = feedToAttachResultsTo;
-    }
+    }*/
 }
