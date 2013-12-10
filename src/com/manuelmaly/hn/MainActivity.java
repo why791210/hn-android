@@ -202,10 +202,10 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
             	Intent intent = new Intent();
                 intent.setClass(MainActivity.this, searchActivity_.class);
             	
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("HNFeed", mFeed);
-                bundle.putBoolean("IsSearchResult", mIsSearchResult);
-                intent.putExtras(bundle);
+                //Bundle bundle = new Bundle();
+                //bundle.putSerializable("HNFeed", mFeed);
+                //bundle.putBoolean("IsSearchResult", mIsSearchResult);
+                //intent.putExtras(bundle);
                 
                 startActivityForResult(intent, ACTIVITY_IDENTIFIER);
                 popupWindow.dismiss();

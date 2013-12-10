@@ -1,5 +1,7 @@
 package com.manuelmaly.hn;
 
+import java.util.HashMap;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -47,6 +49,7 @@ public class searchActivity extends Activity implements ITaskFinishedHandler<HNF
     @Click(R.id.searchbutton)
     void searchButtonClicked() {
     	String searchString = mSearchName.getText().toString();
+    	HashMap<String, String> param = new HashMap<String, String>();
     	
     	// check empty.
     	if(TextUtils.isEmpty(searchString))
@@ -61,7 +64,19 @@ public class searchActivity extends Activity implements ITaskFinishedHandler<HNF
     		return ;
     	}
     	
-    	HNFeedTaskSearch.start(this, this, TASKCODE_SEARCH, searchString);
+    	// set search parameters.
+		param.put("q", searchString);
+		param.put("weights[title]", "1.1");
+		param.put("weights[text]", "0.7");
+		param.put("weights[domain]", "2.0");
+		param.put("weights[username]", "0.1");
+		param.put("weights[type]", "0.0");
+		param.put("boosts[fields][points]", "0.15");
+		param.put("boosts[fields][num_comments]", "0.15");
+		param.put("boosts[functions][pow(2,div(div(ms(create_ts,NOW),3600000),72))]", "200.00");
+		param.put("pretty_print", "true");
+		
+    	HNFeedTaskSearch.start(this, this, TASKCODE_SEARCH, param);
     	
     }
     
