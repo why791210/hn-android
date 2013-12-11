@@ -3,7 +3,6 @@ package com.manuelmaly.hn;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -229,6 +228,8 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
           //String newText = data.getStringExtra(PUBLIC_STATIC_STRING_IDENTIFIER);
           // TODO Update your TextView.
           } 
+         
+          
           break; 
         } 
       } 
