@@ -37,7 +37,7 @@ import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.SystemService;
 import com.googlecode.androidannotations.annotations.ViewById;
-import com.manuelmaly.hn.login.LoginActivity_;
+import com.manuelmaly.hn.login.LoginActivity;
 //import com.manuelmaly.hn.login.LoginActivity_;
 import com.manuelmaly.hn.model.HNComment;
 import com.manuelmaly.hn.model.HNPost;
@@ -437,7 +437,7 @@ public class CommentsActivity extends BaseListActivity implements ITaskFinishedH
             if (clickedText.equals(getApplicationContext().getString(R.string.upvote))) {
                 if (!mIsLoggedIn) {
                     setCommentToUpvote(mComment);
-                    startActivityForResult(new Intent(getApplicationContext(), LoginActivity_.class),
+                    startActivityForResult(new Intent(getApplicationContext(), LoginActivity.class),
                             ACTIVITY_LOGIN);
                 }
                 else

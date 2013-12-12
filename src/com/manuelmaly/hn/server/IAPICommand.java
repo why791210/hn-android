@@ -57,4 +57,8 @@ public interface IAPICommand<T> extends Runnable {
         GET, PUT, POST, DELETE
     }
     
+    // Add request header type #Calvin Chang
+    public enum HeaderType {
+        JSON, HTML, MULTIPART 
+    }    
 }

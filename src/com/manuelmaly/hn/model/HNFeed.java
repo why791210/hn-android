@@ -27,6 +27,11 @@ public class HNFeed implements Serializable {
         mPosts.add(post);
     }
 
+    // # Calvin Chang
+    public void clearPost() {
+        mPosts.clear();
+    }    
+    
     public List<HNPost> getPosts() {
         return mPosts;
     }
