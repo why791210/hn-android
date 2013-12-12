@@ -221,6 +221,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
             @Override
             public void onClick(View v) {
             	startHotnewsFeedLoading();
+            	popupWindow.dismiss();
             }
         });
 
@@ -318,7 +319,17 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
     
     //#t800516
     private void startHotnewsFeedLoading() {
-    	hotnews_param.put("sortby", "points desc");
+    	hotnews_param.put("sortby", "num_comments desc");
+    	hotnews_param.put("q", "");
+    	hotnews_param.put("limit", "30");
+		hotnews_param.put("weights[title]", "30");
+		hotnews_param.put("weights[url]", "30");
+		hotnews_param.put("weights[text]", "0.7");
+		hotnews_param.put("weights[domain]", "2.0");
+		hotnews_param.put("weights[username]", "0.1");
+		hotnews_param.put("weights[type]", "0.0");
+		hotnews_param.put("boosts[fields][points]", "0.15");
+		hotnews_param.put("boosts[fields][num_comments]", "0.15");
     	hotnews_param.put("boosts[functions][pow(2,div(div(ms(create_ts,NOW),3600000),72))]", "200.00");
     	hotnews_param.put("pretty_print", "true");
         HNFeedTaskHotnews.start(this, this, TASKCODE_LOAD_HOTNEWS, hotnews_param);
