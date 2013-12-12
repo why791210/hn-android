@@ -2,6 +2,7 @@ package com.manuelmaly.hn;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import android.app.Activity;
@@ -43,6 +44,7 @@ import com.manuelmaly.hn.model.HNFeed;
 import com.manuelmaly.hn.model.HNPost;
 import com.manuelmaly.hn.parser.BaseHTMLParser;
 import com.manuelmaly.hn.server.HNCredentials;
+import com.manuelmaly.hn.task.HNFeedTaskHotnews;
 import com.manuelmaly.hn.task.HNFeedTaskLoadMore;
 import com.manuelmaly.hn.task.HNFeedTaskMainFeed;
 import com.manuelmaly.hn.task.HNVoteTask;
@@ -81,6 +83,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
     HNFeed mFeed;
     PostsAdapter mPostsListAdapter;
     HashSet<HNPost> mUpvotedPosts;
+    HashMap<String, String> hotnews_param = new HashMap<String, String>();
 
     String mCurrentFontSize = null;
     int mFontSizeTitle;
@@ -90,6 +93,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
     private static final int TASKCODE_LOAD_MORE_POSTS = 20;
     private static final int TASKCODE_VOTE = 100;
     private static final int ACTIVITY_IDENTIFIER = 1;
+    private static final int TASKCODE_LOAD_HOTNEWS = 30;
     
     private static final String LIST_STATE = "listState";
     private Parcelable mListState = null;
@@ -140,7 +144,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
         // restore vertical scrolling position if applicable
         if (mListState != null)
             mPostsList.onRestoreInstanceState(mListState);
-            mListState = null;
+        mListState = null;
     }
     
     @Click(R.id.actionbar)
@@ -155,15 +159,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
         else
             startFeedLoading();
     }
-    //by eating -same as refreshClicked
-    @Click(R.id.homeicon)
-    void homeClick() {
-    	if (HNFeedTaskMainFeed.isRunning(getApplicationContext()))
-            HNFeedTaskMainFeed.stopCurrent(getApplicationContext());
-        else
-            startFeedLoading();
-    	
-    }
+
     @Click(R.id.actionbar_more)
     void moreClicked() {
         mActionbarMore.setSelected(true);
@@ -218,19 +214,17 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
                 popupWindow.dismiss();
             }
         });
+        
+        Button hotnewsButton = (Button) moreContentView.findViewById(R.id.main_more_content_hotnews);
+        hotnewsButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            	startHotnewsFeedLoading();
+            }
+        });
 
         popupWindow.update(moreContentView.getMeasuredWidth(), moreContentView.getMeasuredHeight());
     }
-    
-  /*  @Click
-    View homeView = (ImageView) findViewById(R.id.homeicon);
-    backView.setOnClickListener(new OnClickListener() {
-        public void onClick(View v) {
-            finish();
-        }
-    });
-    */
-    
     
     @Override 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {	
@@ -271,6 +265,12 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
 
             mFeed.appendLoadMoreFeed(result);
             mPostsListAdapter.notifyDataSetChanged();
+        }
+        else if (taskCode == TASKCODE_LOAD_HOTNEWS)
+        {
+        	mFeed.clearPost();
+      	    mFeed.addPosts(result.getPosts());
+      	    showFeed(mFeed);
         }
 
     }
@@ -315,6 +315,17 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
         mActionbarRefresh.setVisibility(View.GONE);
     }
 
+    private void startHotnewsFeedLoading() {
+    	hotnews_param.put("sortby", "points desc");
+    	hotnews_param.put("boosts[functions][pow(2,div(div(ms(create_ts,NOW),3600000),72))]", "200.00");
+    	hotnews_param.put("pretty_print", "true");
+        HNFeedTaskHotnews.start(this, this, TASKCODE_LOAD_HOTNEWS, hotnews_param);
+        mActionbarRefresh.setImageResource(R.drawable.refresh);
+        
+        mActionbarRefreshProgress.setVisibility(View.VISIBLE);
+        mActionbarRefresh.setVisibility(View.GONE);
+    }
+    
     private boolean refreshFontSizes() {
         final String fontSize = Settings.getFontSize(this);
         if ((mCurrentFontSize == null) || (!mCurrentFontSize.equals(fontSize))) {
