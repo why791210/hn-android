@@ -5,7 +5,6 @@ import java.util.HashMap;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,7 +14,6 @@ import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ViewById;
-
 import com.manuelmaly.hn.model.HNFeed;
 import com.manuelmaly.hn.task.HNFeedTaskSearch;
 import com.manuelmaly.hn.task.ITaskFinishedHandler;
@@ -66,6 +64,7 @@ public class searchActivity extends Activity implements ITaskFinishedHandler<HNF
     	
     	// set search parameters.
 		param.put("q", searchString);
+		param.put("limit", "30");
 		param.put("weights[title]", "1.1");
 		param.put("weights[text]", "0.7");
 		param.put("weights[domain]", "2.0");
