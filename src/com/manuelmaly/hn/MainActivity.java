@@ -155,7 +155,14 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
         else
             startFeedLoading();
     }
-
+    @Click(R.id.homeicon)
+    void homeClick() {
+    	if (HNFeedTaskMainFeed.isRunning(getApplicationContext()))
+            HNFeedTaskMainFeed.stopCurrent(getApplicationContext());
+        else
+            startFeedLoading();
+    	
+    }
     @Click(R.id.actionbar_more)
     void moreClicked() {
         mActionbarMore.setSelected(true);
@@ -213,6 +220,16 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
 
         popupWindow.update(moreContentView.getMeasuredWidth(), moreContentView.getMeasuredHeight());
     }
+    
+  /*  @Click
+    View homeView = (ImageView) findViewById(R.id.homeicon);
+    backView.setOnClickListener(new OnClickListener() {
+        public void onClick(View v) {
+            finish();
+        }
+    });
+    */
+    
     
     @Override 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {	
