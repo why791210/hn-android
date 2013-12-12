@@ -178,9 +178,9 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
                 mActionbarMore.setSelected(false);
             }
         });
-        //search
-        Button searchButton = (Button) moreContentView.findViewById(R.id.main_more_content_about);
-        searchButton.setOnClickListener(new OnClickListener() {
+        
+        Button aboutButton = (Button) moreContentView.findViewById(R.id.main_more_content_about);
+        aboutButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, AboutActivity_.class));
@@ -197,8 +197,8 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
             }
         });
 
-        Button aboutButton = (Button) moreContentView.findViewById(R.id.main_more_content_search);
-        aboutButton.setOnClickListener(new OnClickListener() {
+        Button searchButton = (Button) moreContentView.findViewById(R.id.main_more_content_search);
+        searchButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
             	//mFeed
@@ -215,6 +215,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
             }
         });
         
+        // #t800516
         Button hotnewsButton = (Button) moreContentView.findViewById(R.id.main_more_content_hotnews);
         hotnewsButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -314,7 +315,8 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
         mActionbarRefreshProgress.setVisibility(View.VISIBLE);
         mActionbarRefresh.setVisibility(View.GONE);
     }
-
+    
+    //#t800516
     private void startHotnewsFeedLoading() {
     	hotnews_param.put("sortby", "points desc");
     	hotnews_param.put("boosts[functions][pow(2,div(div(ms(create_ts,NOW),3600000),72))]", "200.00");
