@@ -7,9 +7,9 @@
 
     <LinearLayout
         android:id="@+id/main_list_item_textcontainer"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:layout_weight="1"
+        android:layout_weight="0.87"
         android:background="@drawable/main_list_selector"
         android:gravity="left|center_vertical"
         android:orientation="vertical"
@@ -28,7 +28,7 @@
             android:textStyle="bold" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingTop="5dp" >
@@ -56,7 +56,7 @@
 
     <LinearLayout
         android:id="@+id/main_list_item_comments_container"
-        android:layout_width="wrap_content"
+        android:layout_width="66dp"
         android:layout_height="fill_parent"
         android:background="#fbe9d8"
         android:gravity="center"
@@ -72,6 +72,25 @@
             android:text="0"
             android:textColor="#716961"
             android:textSize="18sp" />
+
+        <LinearLayout
+            android:layout_width="69dp"
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="33dp"
+                android:layout_height="28dp"
+                android:src="@drawable/pic" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="31dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/star_gold_256" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>
