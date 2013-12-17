@@ -159,6 +159,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
         else
             startFeedLoading();
     }
+    //#why791210
     @Click(R.id.homeicon)
        void homeClick() {
           if (HNFeedTaskMainFeed.isRunning(getApplicationContext()))
@@ -203,7 +204,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
                 popupWindow.dismiss();
             }
         });
-
+        //#why791210
         Button searchButton = (Button) moreContentView.findViewById(R.id.main_more_content_search);
         searchButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -211,12 +212,6 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
             	//mFeed
             	Intent intent = new Intent();
                 intent.setClass(MainActivity.this, searchActivity_.class);
-            	
-                //Bundle bundle = new Bundle();
-                //bundle.putSerializable("HNFeed", mFeed);
-                //bundle.putBoolean("IsSearchResult", mIsSearchResult);
-                //intent.putExtras(bundle);
-                
                 startActivityForResult(intent, ACTIVITY_IDENTIFIER);
                 popupWindow.dismiss();
             }
@@ -457,6 +452,8 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
                         holder.commentsButton.setTypeface(FontHelper.getComfortaa(MainActivity.this, false));
                         holder.pointsView = (TextView) convertView.findViewById(R.id.main_list_item_points);
                         holder.pointsView.setTypeface(FontHelper.getComfortaa(MainActivity.this, true));
+                    
+                        
                         convertView.setTag(holder);
                     }
 
