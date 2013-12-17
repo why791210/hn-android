@@ -256,6 +256,8 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
       } 
     }
     
+    
+    
     @Override
     public void onTaskFinished(int taskCode, TaskResultCode code, HNFeed result, Object tag) {
         if (taskCode == TASKCODE_LOAD_FEED) {
