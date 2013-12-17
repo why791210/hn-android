@@ -78,15 +78,15 @@
             android:layout_height="wrap_content" >
 
             <ImageView
-                android:id="@+id/imageView1"
+                android:id="@+id/main_list_item_newstrend_button"
                 android:layout_width="33dp"
                 android:layout_height="28dp"
                 android:src="@drawable/pic" />
 
             <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="31dp"
-                android:layout_height="match_parent"
+                android:id="@+id/main_list_item_favorite_button"
+                android:layout_width="33dp"
+                android:layout_height="28dp"
                 android:src="@drawable/star_gold_256" />
 
         </LinearLayout>
