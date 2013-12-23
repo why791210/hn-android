@@ -20,7 +20,7 @@ import com.manuelmaly.hn.task.ITaskFinishedHandler;
 
 
 @EActivity(R.layout.search)
-public class searchActivity extends Activity implements ITaskFinishedHandler<HNFeed> {
+public class SearchActivity extends Activity implements ITaskFinishedHandler<HNFeed> {
 
     @ViewById(R.id.actionbar_back)
     ImageView mActionbarBack;

@@ -149,108 +149,109 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
     
     @Click(R.id.actionbar)
     void actionBarClicked() {
-        mPostsList.smoothScrollToPosition(0);
+    	mPostsList.smoothScrollToPosition(0);
     }
 
     @Click(R.id.actionbar_refresh_container)
     void refreshClicked() {
-        if (HNFeedTaskMainFeed.isRunning(getApplicationContext()))
-            HNFeedTaskMainFeed.stopCurrent(getApplicationContext());
-        else
-            startFeedLoading();
+    	if (HNFeedTaskMainFeed.isRunning(getApplicationContext()))
+    		HNFeedTaskMainFeed.stopCurrent(getApplicationContext());
+    	else
+    		startFeedLoading();
     }
+    
     //#why791210
     @Click(R.id.homeicon)
-       void homeClick() {
-          if (HNFeedTaskMainFeed.isRunning(getApplicationContext()))
-                HNFeedTaskMainFeed.stopCurrent(getApplicationContext());
-           else
-                startFeedLoading();
-          
-        }
+    void homeClick() {
+    	if (HNFeedTaskMainFeed.isRunning(getApplicationContext()))
+    		HNFeedTaskMainFeed.stopCurrent(getApplicationContext());
+    	else
+    		startFeedLoading();
+
+    }
     @Click(R.id.actionbar_more)
     void moreClicked() {
-        mActionbarMore.setSelected(true);
-        LinearLayout moreContentView = (LinearLayout) mInflater.inflate(R.layout.main_more_content, null);
+    	mActionbarMore.setSelected(true);
+    	LinearLayout moreContentView = (LinearLayout) mInflater.inflate(R.layout.main_more_content, null);
 
-        moreContentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        final PopupWindow popupWindow = new PopupWindow(this);
-        popupWindow.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.red_dark_washedout)));
-        popupWindow.setContentView(moreContentView);
-        popupWindow.showAsDropDown(mActionbarMore);
-        popupWindow.setTouchable(true);
-        popupWindow.setFocusable(true);
-        popupWindow.setOutsideTouchable(true);
-        popupWindow.setOnDismissListener(new OnDismissListener() {
-            public void onDismiss() {
-                mActionbarMore.setSelected(false);
-            }
-        });
-        
-        Button aboutButton = (Button) moreContentView.findViewById(R.id.main_more_content_about);
-        aboutButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, AboutActivity_.class));
-                popupWindow.dismiss();
-            }
-        });
+    	moreContentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+    	final PopupWindow popupWindow = new PopupWindow(this);
+    	popupWindow.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.red_dark_washedout)));
+    	popupWindow.setContentView(moreContentView);
+    	popupWindow.showAsDropDown(mActionbarMore);
+    	popupWindow.setTouchable(true);
+    	popupWindow.setFocusable(true);
+    	popupWindow.setOutsideTouchable(true);
+    	popupWindow.setOnDismissListener(new OnDismissListener() {
+    		public void onDismiss() {
+    			mActionbarMore.setSelected(false);
+    		}
+    	});
 
-        Button settingsButton = (Button) moreContentView.findViewById(R.id.main_more_content_settings);
-        settingsButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-                popupWindow.dismiss();
-            }
-        });
-        //#why791210
-        Button searchButton = (Button) moreContentView.findViewById(R.id.main_more_content_search);
-        searchButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            	//mFeed
-            	Intent intent = new Intent();
-                intent.setClass(MainActivity.this, searchActivity_.class);
-                startActivityForResult(intent, ACTIVITY_IDENTIFIER);
-                popupWindow.dismiss();
-            }
-        });
-        
-        // #t800516
-        Button hotnewsButton = (Button) moreContentView.findViewById(R.id.main_more_content_hotnews);
-        hotnewsButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            	startHotnewsFeedLoading();
-            	popupWindow.dismiss();
-            }
-        });
+    	Button aboutButton = (Button) moreContentView.findViewById(R.id.main_more_content_about);
+    	aboutButton.setOnClickListener(new OnClickListener() {
+    		@Override
+    		public void onClick(View v) {
+    			startActivity(new Intent(MainActivity.this, AboutActivity_.class));
+    			popupWindow.dismiss();
+    		}
+    	});
 
-        popupWindow.update(moreContentView.getMeasuredWidth(), moreContentView.getMeasuredHeight());
+    	Button settingsButton = (Button) moreContentView.findViewById(R.id.main_more_content_settings);
+    	settingsButton.setOnClickListener(new OnClickListener() {
+    		@Override
+    		public void onClick(View v) {
+    			startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+    			popupWindow.dismiss();
+    		}
+    	});
+    	//#why791210
+    	Button searchButton = (Button) moreContentView.findViewById(R.id.main_more_content_search);
+    	searchButton.setOnClickListener(new OnClickListener() {
+    		@Override
+    		public void onClick(View v) {
+    			//mFeed
+    			Intent intent = new Intent();
+    			intent.setClass(MainActivity.this, SearchActivity_.class);
+    			startActivityForResult(intent, ACTIVITY_IDENTIFIER);
+    			popupWindow.dismiss();
+    		}
+    	});
+
+    	// #t800516
+    	Button hotnewsButton = (Button) moreContentView.findViewById(R.id.main_more_content_hotnews);
+    	hotnewsButton.setOnClickListener(new OnClickListener() {
+    		@Override
+    		public void onClick(View v) {
+    			startHotnewsFeedLoading();
+    			popupWindow.dismiss();
+    		}
+    	});
+
+    	popupWindow.update(moreContentView.getMeasuredWidth(), moreContentView.getMeasuredHeight());
     }
-    
+
     @Override 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {	
-      super.onActivityResult(requestCode, resultCode, data); 
-      //Bundle bundle = this.getIntent().getExtras();
-      
-      switch(requestCode) { 
-        case (ACTIVITY_IDENTIFIER) : { 
-          if (resultCode == Activity.RESULT_OK) { 
-        	  mIsSearchResult = (boolean)data.getBooleanExtra("IsSearchResult", false);
-        	  mFeed.clearPost();
-        	  mFeed.addPosts(((HNFeed)data.getSerializableExtra("HNFeed")).getPosts());
-          //String newText = data.getStringExtra(PUBLIC_STATIC_STRING_IDENTIFIER);
-          // TODO Update your TextView.
-          } 
-         
-          
-          break; 
-        } 
-      } 
+    	super.onActivityResult(requestCode, resultCode, data); 
+    	//Bundle bundle = this.getIntent().getExtras();
+
+    	switch(requestCode) { 
+    	case (ACTIVITY_IDENTIFIER) : { 
+    		if (resultCode == Activity.RESULT_OK) { 
+    			mIsSearchResult = (boolean)data.getBooleanExtra("IsSearchResult", false);
+    			mFeed.clearPost();
+    			mFeed.addPosts(((HNFeed)data.getSerializableExtra("HNFeed")).getPosts());
+    			//String newText = data.getStringExtra(PUBLIC_STATIC_STRING_IDENTIFIER);
+    			// TODO Update your TextView.
+    		} 
+
+
+    		break; 
+    	} 
+    	} 
     }
-    
+
     
     
     @Override
@@ -452,7 +453,6 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
                         holder.commentsButton.setTypeface(FontHelper.getComfortaa(MainActivity.this, false));
                         holder.pointsView = (TextView) convertView.findViewById(R.id.main_list_item_points);
                         holder.pointsView.setTypeface(FontHelper.getComfortaa(MainActivity.this, true));
-                    
                         
                         convertView.setTag(holder);
                     }
