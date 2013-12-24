@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -218,7 +219,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
     		}
     	});
 
-    	// #t800516
+    	//#t800516
     	Button hotnewsButton = (Button) moreContentView.findViewById(R.id.main_more_content_hotnews);
     	hotnewsButton.setOnClickListener(new OnClickListener() {
     		@Override
@@ -453,6 +454,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
                         holder.commentsButton.setTypeface(FontHelper.getComfortaa(MainActivity.this, false));
                         holder.pointsView = (TextView) convertView.findViewById(R.id.main_list_item_points);
                         holder.pointsView.setTypeface(FontHelper.getComfortaa(MainActivity.this, true));
+                        holder.newstrendButton = (ImageButton) convertView.findViewById(R.id.main_list_item_newstrend_button);
                         
                         convertView.setTag(holder);
                     }
@@ -500,6 +502,13 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
                             builder.setAdapter(adapter, adapter).show();
                             return true;
                         }
+                    });
+                    holder.newstrendButton.setOnClickListener(new OnClickListener() {
+                    	public void onClick(View v){
+                    		Intent i = new Intent(MainActivity.this, NewsTrendActivity_.class);
+                    		i.putExtra(NewsTrendActivity.EXTRA_HNPOST, getItem(position));
+                    		startActivity(i);
+                    	}
                     });
                     break;
 
@@ -676,6 +685,8 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
         TextView commentsCountView;
         LinearLayout textContainer;
         Button commentsButton;
+        //#t800516
+        ImageButton newstrendButton;
     }
 
 }
