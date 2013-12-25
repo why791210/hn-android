@@ -1,3 +1,8 @@
+// Modify by CalvinChang 
+// Login Id : CalvinChang 
+// Student Id : 101552030
+// Tag : #CalvinChang + number
+
 package com.manuelmaly.hn.server;
 
 /**
@@ -57,7 +62,7 @@ public interface IAPICommand<T> extends Runnable {
         GET, PUT, POST, DELETE
     }
     
-    // Add request header type #Calvin Chang
+    // Add request header type #CalvinChang01
     public enum HeaderType {
         JSON, HTML, MULTIPART 
     }    

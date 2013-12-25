@@ -1,3 +1,8 @@
+// Create by CalvinChang 
+// Login Id : CalvinChang 
+// Student Id : 101552030
+// Tag : #CalvinChang + number
+
 package com.manuelmaly.hn.task;
 import java.util.HashMap;
 
@@ -7,6 +12,7 @@ import com.manuelmaly.hn.server.IAPICommand;
 import android.app.Activity;
 import android.content.Context;
 
+// a task for search #CalvinChang01
 public class HNFeedTaskSearch extends HNFeedTaskBase {
 
 	//private HNFeed mFeedToAttachResultsTo;

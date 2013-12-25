@@ -1,3 +1,10 @@
+// Modify by CalvinChang, why791210, t800516 
+// Login Id : CalvinChang, why791210, t800516
+// Student Id : 101552030
+// Tag : #CalvinChang + number
+//       #why791210
+//		 #t800516
+
 package com.manuelmaly.hn;
 
 import java.util.ArrayList;
@@ -97,7 +104,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
     
     private static final String LIST_STATE = "listState";
     private Parcelable mListState = null;
-    // #Calvin Chang
+    // #CalvinChang01
     private boolean mIsSearchResult = false;
     @AfterViews
     public void init() {
@@ -134,6 +141,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
         if (refreshFontSizes())
         	mPostsListAdapter.notifyDataSetChanged();
         
+     // #CalvinChang02
         // load search result
         if(mIsSearchResult)
         {
@@ -230,6 +238,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
         popupWindow.update(moreContentView.getMeasuredWidth(), moreContentView.getMeasuredHeight());
     }
     
+    // #CalvinChang03
     @Override 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {	
       super.onActivityResult(requestCode, resultCode, data); 
