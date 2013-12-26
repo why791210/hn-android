@@ -503,6 +503,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
                             return true;
                         }
                     });
+                    //#t800516
                     holder.newstrendButton.setOnClickListener(new OnClickListener() {
                     	public void onClick(View v){
                     		Intent i = new Intent(MainActivity.this, NewsTrendActivity_.class);
@@ -685,7 +686,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
         TextView commentsCountView;
         LinearLayout textContainer;
         Button commentsButton;
-        //#t800516
+        //#0
         ImageButton newstrendButton;
     }
 
