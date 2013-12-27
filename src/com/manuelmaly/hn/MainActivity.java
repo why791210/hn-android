@@ -1,7 +1,15 @@
+// Modify by CalvinChang, why791210, t800516 
+// Login Id : CalvinChang, why791210, t800516
+// Student Id : 101552030
+// Tag : #CalvinChang + number
+//       #why791210
+//		 #t800516
+
 package com.manuelmaly.hn;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import android.app.Activity;
@@ -43,6 +51,7 @@ import com.manuelmaly.hn.model.HNFeed;
 import com.manuelmaly.hn.model.HNPost;
 import com.manuelmaly.hn.parser.BaseHTMLParser;
 import com.manuelmaly.hn.server.HNCredentials;
+import com.manuelmaly.hn.task.HNFeedTaskHotnews;
 import com.manuelmaly.hn.task.HNFeedTaskLoadMore;
 import com.manuelmaly.hn.task.HNFeedTaskMainFeed;
 import com.manuelmaly.hn.task.HNVoteTask;
@@ -81,6 +90,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
     HNFeed mFeed;
     PostsAdapter mPostsListAdapter;
     HashSet<HNPost> mUpvotedPosts;
+    HashMap<String, String> hotnews_param = new HashMap<String, String>();
 
     String mCurrentFontSize = null;
     int mFontSizeTitle;
@@ -90,10 +100,11 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
     private static final int TASKCODE_LOAD_MORE_POSTS = 20;
     private static final int TASKCODE_VOTE = 100;
     private static final int ACTIVITY_IDENTIFIER = 1;
+    private static final int TASKCODE_LOAD_HOTNEWS = 30;
     
     private static final String LIST_STATE = "listState";
     private Parcelable mListState = null;
-    // #Calvin Chang
+    // #CalvinChang01
     private boolean mIsSearchResult = false;
     @AfterViews
     public void init() {
@@ -130,6 +141,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
         if (refreshFontSizes())
         	mPostsListAdapter.notifyDataSetChanged();
         
+     // #CalvinChang02
         // load search result
         if(mIsSearchResult)
         {
@@ -155,7 +167,15 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
         else
             startFeedLoading();
     }
-
+    //#why791210
+    @Click(R.id.homeicon)
+       void homeClick() {
+          if (HNFeedTaskMainFeed.isRunning(getApplicationContext()))
+                HNFeedTaskMainFeed.stopCurrent(getApplicationContext());
+           else
+                startFeedLoading();
+          
+        }
     @Click(R.id.actionbar_more)
     void moreClicked() {
         mActionbarMore.setSelected(true);
@@ -174,9 +194,9 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
                 mActionbarMore.setSelected(false);
             }
         });
-        //search
-        Button searchButton = (Button) moreContentView.findViewById(R.id.main_more_content_about);
-        searchButton.setOnClickListener(new OnClickListener() {
+        
+        Button aboutButton = (Button) moreContentView.findViewById(R.id.main_more_content_about);
+        aboutButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, AboutActivity_.class));
@@ -192,28 +212,33 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
                 popupWindow.dismiss();
             }
         });
-
-        Button aboutButton = (Button) moreContentView.findViewById(R.id.main_more_content_search);
-        aboutButton.setOnClickListener(new OnClickListener() {
+        //#why791210
+        Button searchButton = (Button) moreContentView.findViewById(R.id.main_more_content_search);
+        searchButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
             	//mFeed
             	Intent intent = new Intent();
                 intent.setClass(MainActivity.this, searchActivity_.class);
-            	
-                //Bundle bundle = new Bundle();
-                //bundle.putSerializable("HNFeed", mFeed);
-                //bundle.putBoolean("IsSearchResult", mIsSearchResult);
-                //intent.putExtras(bundle);
-                
                 startActivityForResult(intent, ACTIVITY_IDENTIFIER);
                 popupWindow.dismiss();
+            }
+        });
+        
+        // #t800516
+        Button hotnewsButton = (Button) moreContentView.findViewById(R.id.main_more_content_hotnews);
+        hotnewsButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            	startHotnewsFeedLoading();
+            	popupWindow.dismiss();
             }
         });
 
         popupWindow.update(moreContentView.getMeasuredWidth(), moreContentView.getMeasuredHeight());
     }
     
+    // #CalvinChang03
     @Override 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {	
       super.onActivityResult(requestCode, resultCode, data); 
@@ -235,6 +260,8 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
       } 
     }
     
+    
+    
     @Override
     public void onTaskFinished(int taskCode, TaskResultCode code, HNFeed result, Object tag) {
         if (taskCode == TASKCODE_LOAD_FEED) {
@@ -253,6 +280,12 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
 
             mFeed.appendLoadMoreFeed(result);
             mPostsListAdapter.notifyDataSetChanged();
+        }
+        else if (taskCode == TASKCODE_LOAD_HOTNEWS)
+        {
+        	mFeed.clearPost();
+      	    mFeed.addPosts(result.getPosts());
+      	    showFeed(mFeed);
         }
 
     }
@@ -296,7 +329,29 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
         mActionbarRefreshProgress.setVisibility(View.VISIBLE);
         mActionbarRefresh.setVisibility(View.GONE);
     }
-
+    
+    //#t800516
+    private void startHotnewsFeedLoading() {
+    	hotnews_param.put("sortby", "num_comments desc");
+    	hotnews_param.put("q", "");
+    	hotnews_param.put("limit", "30");
+		hotnews_param.put("weights[title]", "30");
+		hotnews_param.put("weights[url]", "30");
+		hotnews_param.put("weights[text]", "0.7");
+		hotnews_param.put("weights[domain]", "2.0");
+		hotnews_param.put("weights[username]", "0.1");
+		hotnews_param.put("weights[type]", "0.0");
+		hotnews_param.put("boosts[fields][points]", "0.15");
+		hotnews_param.put("boosts[fields][num_comments]", "0.15");
+    	hotnews_param.put("boosts[functions][pow(2,div(div(ms(create_ts,NOW),3600000),72))]", "200.00");
+    	hotnews_param.put("pretty_print", "true");
+        HNFeedTaskHotnews.start(this, this, TASKCODE_LOAD_HOTNEWS, hotnews_param);
+        mActionbarRefresh.setImageResource(R.drawable.refresh);
+        
+        mActionbarRefreshProgress.setVisibility(View.VISIBLE);
+        mActionbarRefresh.setVisibility(View.GONE);
+    }
+    
     private boolean refreshFontSizes() {
         final String fontSize = Settings.getFontSize(this);
         if ((mCurrentFontSize == null) || (!mCurrentFontSize.equals(fontSize))) {
@@ -406,6 +461,8 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
                         holder.commentsButton.setTypeface(FontHelper.getComfortaa(MainActivity.this, false));
                         holder.pointsView = (TextView) convertView.findViewById(R.id.main_list_item_points);
                         holder.pointsView.setTypeface(FontHelper.getComfortaa(MainActivity.this, true));
+                    
+                        
                         convertView.setTag(holder);
                     }
 

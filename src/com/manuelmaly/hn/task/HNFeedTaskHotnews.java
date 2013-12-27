@@ -1,40 +1,38 @@
-// Create by CalvinChang 
-// Login Id : CalvinChang 
-// Student Id : 101552030
-// Tag : #CalvinChang + number
-
 package com.manuelmaly.hn.task;
+
 import java.util.HashMap;
 
-import com.manuelmaly.hn.model.HNFeed;
-import com.manuelmaly.hn.server.IAPICommand;
+/*
+ * Add by t800516
+ */
 
 import android.app.Activity;
 import android.content.Context;
 
-// a task for search #CalvinChang01
-public class HNFeedTaskSearch extends HNFeedTaskBase {
+import com.manuelmaly.hn.model.HNFeed;
+import com.manuelmaly.hn.server.IAPICommand;
 
-	//private HNFeed mFeedToAttachResultsTo;
-	private static HNFeedTaskSearch instance;
+public class HNFeedTaskHotnews extends HNFeedTaskBase {
+
+	private static HNFeedTaskHotnews instance;
 	private static HashMap<String, String> mParam = null;
-	public static final String BROADCAST_INTENT_ID = "HNFeedSearch";
-    private static HNFeedTaskSearch getInstance(int taskCode) {
+	public static final String BROADCAST_INTENT_ID = "HNFeedHotnews";
+    private static HNFeedTaskHotnews getInstance(int taskCode) {
         synchronized (HNFeedTaskBase.class) {
             if (instance == null)
-                instance = new HNFeedTaskSearch(taskCode);
+                instance = new HNFeedTaskHotnews(taskCode);
         }
         return instance;
     }
 	
-    private HNFeedTaskSearch(int taskCode) {
+    private HNFeedTaskHotnews(int taskCode) {
         super(BROADCAST_INTENT_ID, taskCode);
         mHeaderType = IAPICommand.HeaderType.JSON;
     }
     
     public static void start(Activity activity, ITaskFinishedHandler<HNFeed> finishedHandler, int taskCode, HashMap<String, String> param) {
     	
-    	HNFeedTaskSearch task = getInstance(taskCode);
+    	HNFeedTaskHotnews task = getInstance(taskCode);
     	mParam = param;
         task.setOnFinishedHandler(activity, finishedHandler, HNFeed.class);
         if (!task.isRunning())
@@ -44,13 +42,11 @@ public class HNFeedTaskSearch extends HNFeedTaskBase {
     
 	@Override
 	protected String getFeedURL() {
-		// test url
 		return "http://api.thriftdb.com/api.hnsearch.com/items/_search";
 	}
 	
 	@Override
     protected HashMap<String, String> getFeedParam(){
-
     	return mParam;
     }
 	
@@ -61,8 +57,5 @@ public class HNFeedTaskSearch extends HNFeedTaskBase {
     public static boolean isRunning(Context applicationContext) {
         return getInstance(0).isRunning();
     }
-   /* 
-    public void setFeedToAttachResultsTo(HNFeed feedToAttachResultsTo) {
-        this.mFeedToAttachResultsTo = feedToAttachResultsTo;
-    }*/
+
 }

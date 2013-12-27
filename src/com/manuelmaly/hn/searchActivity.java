@@ -5,7 +5,6 @@ import java.util.HashMap;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,7 +14,6 @@ import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ViewById;
-
 import com.manuelmaly.hn.model.HNFeed;
 import com.manuelmaly.hn.task.HNFeedTaskSearch;
 import com.manuelmaly.hn.task.ITaskFinishedHandler;
@@ -66,14 +64,20 @@ public class searchActivity extends Activity implements ITaskFinishedHandler<HNF
     	
     	// set search parameters.
 		param.put("q", searchString);
+<<<<<<< HEAD
 		param.put("limit", "20");
 		param.put("weights[title]", "1.1");
+=======
+		param.put("limit", "30");
+		param.put("sortby", "points desc");
+		param.put("weights[title]", "10.0");	
+		param.put("weights[url]", "10.0");
+>>>>>>> c3880abfb0e5aacb7ffb45b1c6e7d5dafd3d0f53
 		param.put("weights[text]", "0.7");
 		param.put("weights[domain]", "2.0");
 		param.put("weights[username]", "0.1");
-		param.put("weights[type]", "0.0");
 		param.put("boosts[fields][points]", "0.15");
-		param.put("boosts[fields][num_comments]", "0.15");
+	    param.put("boosts[fields][num_comments]", "0.15");
 		param.put("boosts[functions][pow(2,div(div(ms(create_ts,NOW),3600000),72))]", "200.00");
 		param.put("pretty_print", "true");
 		
