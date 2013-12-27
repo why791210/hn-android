@@ -64,15 +64,12 @@ public class searchActivity extends Activity implements ITaskFinishedHandler<HNF
     	
     	// set search parameters.
 		param.put("q", searchString);
-<<<<<<< HEAD
-		param.put("limit", "20");
-		param.put("weights[title]", "1.1");
-=======
+
 		param.put("limit", "30");
 		param.put("sortby", "points desc");
 		param.put("weights[title]", "10.0");	
 		param.put("weights[url]", "10.0");
->>>>>>> c3880abfb0e5aacb7ffb45b1c6e7d5dafd3d0f53
+
 		param.put("weights[text]", "0.7");
 		param.put("weights[domain]", "2.0");
 		param.put("weights[username]", "0.1");
