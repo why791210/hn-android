@@ -21,38 +21,16 @@ import com.manuelmaly.hn.task.HNFeedTaskSearch;
 import com.manuelmaly.hn.task.ITaskFinishedHandler;
 
 
-@EActivity(R.layout.search)
-public class searchActivity extends Activity implements ITaskFinishedHandler<HNFeed> {
+public class hotnewsActivity extends Activity implements ITaskFinishedHandler<HNFeed>{
 
-    @ViewById(R.id.actionbar_back)
-    ImageView mActionbarBack;
+private static final int TASKCODE_HOTNEWS = 300;
     
-    @ViewById(R.id.searchbutton)
-    Button mSearchButton;
     
-    @ViewById(R.id.searchname)
-    EditText mSearchName;
-    
-    private static final int TASKCODE_SEARCH = 200;
-    
-    @AfterViews
-    public void init() {
-        //Typeface tf = FontHelper.getComfortaa(this, true);
-       
-    }
-
-    @Click(R.id.actionbar_back)
-    void backClicked() {
-        finish();
-    }
-    
-    @Click(R.id.searchbutton)
-    void searchButtonClicked() {
-    	String searchString = mSearchName.getText().toString();
+    	//String searchString = mSearchName.getText().toString();
     	HashMap<String, String> param = new HashMap<String, String>();
     	
     	// check empty.
-    	if(TextUtils.isEmpty(searchString))
+    	/*if(TextUtils.isEmpty(searchString))
     	{
     		AlertDialog.Builder builder = new AlertDialog.Builder(this);
         	builder
@@ -62,11 +40,10 @@ public class searchActivity extends Activity implements ITaskFinishedHandler<HNF
         	.setNegativeButton("OK", null)						//Do nothing on no
         	.show();
     		return ;
-    	}
+    	}*/
     	
     	// set search parameters.
-		param.put("q", searchString);
-		param.put("limit", "20");
+		param.put("sortby", "point desc");
 		param.put("weights[title]", "1.1");
 		param.put("weights[text]", "0.7");
 		param.put("weights[domain]", "2.0");
@@ -77,9 +54,9 @@ public class searchActivity extends Activity implements ITaskFinishedHandler<HNF
 		param.put("boosts[functions][pow(2,div(div(ms(create_ts,NOW),3600000),72))]", "200.00");
 		param.put("pretty_print", "true");
 		
-    	HNFeedTaskSearch.start(this, this, TASKCODE_SEARCH, param);
+    	HNFeedTaskSearch.start(this, this, TASKCODE_HOTNEWS, param);
     	
-    }
+    
     
     // finish handler # Calvin Chang
     @Override
