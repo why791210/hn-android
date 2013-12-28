@@ -225,6 +225,19 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
             }
         });
         
+        //#luke0803
+        Button myfavoriteButton = (Button) moreContentView.findViewById(R.id.main_more_content_myfavorite);
+        myfavoriteButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            	startHotnewsFeedLoading();
+            	popupWindow.dismiss();
+            }
+        });
+
+        popupWindow.update(moreContentView.getMeasuredWidth(), moreContentView.getMeasuredHeight());
+    
+        
         // #t800516
         Button hotnewsButton = (Button) moreContentView.findViewById(R.id.main_more_content_hotnews);
         hotnewsButton.setOnClickListener(new OnClickListener() {
