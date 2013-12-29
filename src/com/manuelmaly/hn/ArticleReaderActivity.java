@@ -2,6 +2,7 @@ package com.manuelmaly.hn;
 
 import java.net.URLEncoder;
 
+import android.R.integer;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -32,11 +33,12 @@ public class ArticleReaderActivity extends Activity {
     private static final String WEB_VIEW_SAVED_STATE_KEY = "webViewSavedState";
     public static final String EXTRA_HNPOST = "HNPOST";
     public static final String EXTRA_HTMLPROVIDER_OVERRIDE = "HTMLPROVIDER_OVERRIDE";
-
+    
     private static final String HTMLPROVIDER_PREFIX_VIEWTEXT = "http://viewtext.org/article?url=";
     private static final String HTMLPROVIDER_PREFIX_GOOGLE = "http://www.google.com/gwt/x?u=";
     private static final String HTMLPROVIDER_PREFIX_INSTAPAPER = "http://www.instapaper.com/text?u=";
-
+    
+    public static final String EXTRA_POSITION = "NEXT_POSITION";//#luke0803
     @ViewById(R.id.article_webview)
     WebView mWebView;
 
@@ -114,7 +116,15 @@ public class ArticleReaderActivity extends Activity {
                 startActivity(Intent.createChooser(i, getString(R.string.share_article_url)));
             }
         });
-
+        
+        int position;
+        
+        position = (int) getIntent().getIntExtra(EXTRA_POSITION, -1);
+		if (position == -1) {
+		}
+        
+        
+        
         mPost = (HNPost) getIntent().getSerializableExtra(EXTRA_HNPOST);
         if (mPost != null && mPost.getURL() != null) {
             String htmlProviderOverride = getIntent().getStringExtra(EXTRA_HTMLPROVIDER_OVERRIDE);

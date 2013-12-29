@@ -70,7 +70,7 @@
             android:background="@drawable/bubble"
             android:minWidth="50dp"
             android:text="0"
-            android:textColor="#FFFFFF"
+            android:textColor="#716961"
             android:textSize="18sp" />
 <!--android:textColor="#716961"-->
         <LinearLayout

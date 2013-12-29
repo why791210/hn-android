@@ -9,9 +9,10 @@ package com.manuelmaly.hn;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.HashMap; 
 import java.util.HashSet;
 
+import android.R.integer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -58,6 +59,11 @@ import com.manuelmaly.hn.task.HNVoteTask;
 import com.manuelmaly.hn.task.ITaskFinishedHandler;
 import com.manuelmaly.hn.util.FileUtil;
 import com.manuelmaly.hn.util.FontHelper;
+import android.content.SharedPreferences;//#luke0803
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONException;
+
 
 @EActivity(R.layout.main)
 public class MainActivity extends BaseListActivity implements ITaskFinishedHandler<HNFeed> {
@@ -95,13 +101,19 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
     String mCurrentFontSize = null;
     int mFontSizeTitle;
     int mFontSizeDetails;
-
+    int position;
+    private static final int NEXTPAGE = 0;
+    public static final String ARTICAL_POSITION = "NEXT_POSITION";
+    private SharedPreferences fFeed=null;//#luke0803
+    private JSONArray postJsonArray=null;//#luke0803
+    public static MainActivity instance;//#luke0803
     private static final int TASKCODE_LOAD_FEED = 10;
     private static final int TASKCODE_LOAD_MORE_POSTS = 20;
     private static final int TASKCODE_VOTE = 100;
     private static final int ACTIVITY_IDENTIFIER = 1;
     private static final int TASKCODE_LOAD_HOTNEWS = 30;
-    
+    public static HNFeed favoritePosts;//#luke0803
+  
     private static final String LIST_STATE = "listState";
     private Parcelable mListState = null;
     // #CalvinChang01
@@ -225,13 +237,19 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
             }
         });
         
+      
+        
         //#luke0803
         Button myfavoriteButton = (Button) moreContentView.findViewById(R.id.main_more_content_myfavorite);
         myfavoriteButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+            	
             	startHotnewsFeedLoading();
+    				 
+    		
             	popupWindow.dismiss();
+            	
             }
         });
 
@@ -303,6 +321,12 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
 
     }
 
+    public static MainActivity getInstance()
+    {
+    	return instance;
+    }
+    
+    
     private void showFeed(HNFeed feed) {
         mFeed = feed;
         mPostsListAdapter.notifyDataSetChanged();
@@ -342,6 +366,37 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
         mActionbarRefreshProgress.setVisibility(View.VISIBLE);
         mActionbarRefresh.setVisibility(View.GONE);
     }
+  
+   
+    
+    //#luke0803
+    public boolean addMYFavoritePost(int nPost)  {
+    	fFeed=getSharedPreferences("DATA",0);
+    	if(postJsonArray==null){
+    		postJsonArray = new JSONArray();
+    	}
+    	HNPost temp=mFeed.getPosts().get(nPost);
+    	
+	    	
+	        JSONObject jsonObject = new JSONObject();
+	        try {
+				jsonObject.put("url", temp.getURL());
+		        jsonObject.put("title", temp.getTitle());
+		        jsonObject.put("urlDomain", temp.getURLDomain());
+		        jsonObject.put("author", temp.getAuthor());
+		        jsonObject.put("postID", temp.getPostID());
+		        jsonObject.put("commentsCount", temp.getCommentsCount()); 
+		        jsonObject.put("points", temp.getPoints());
+		        jsonObject.put("upvoteURL", null);         
+			} catch (JSONException e) {
+				
+				e.printStackTrace();
+			} return false;}              
+	       
+
+    
+    
+    
     
     //#t800516
     private void startHotnewsFeedLoading() {
@@ -472,6 +527,34 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
                             .findViewById(R.id.main_list_item_textcontainer);
                         holder.commentsButton = (Button) convertView.findViewById(R.id.main_list_item_comments_button);
                         holder.commentsButton.setTypeface(FontHelper.getComfortaa(MainActivity.this, false));
+                      //#luke0803
+                        holder.pointsView = (TextView) convertView.findViewById(R.id.main_list_item_points);
+                        holder.pointsView.setTypeface(FontHelper.getComfortaa(MainActivity.this, true));
+                        convertView.setTag(holder);
+                        
+                        holder.starButton = (Button) convertView.findViewById(R.id.main_list_item_favorite_button);
+                        holder.starButton.setOnClickListener(new OnClickListener() {
+                        
+                        	@Override
+                            public void onClick(View v) {
+                        		
+                        		
+                        		
+                        		
+                        		 
+                        			Toast.makeText(MainActivity.this, "Already add to the My_Favorite",
+                    						Toast.LENGTH_SHORT).show();
+                        		
+                        		 
+                                	
+                        	}
+                        }); 
+                        	
+                        
+                        
+                  
+                        
+                      //  
                         holder.pointsView = (TextView) convertView.findViewById(R.id.main_list_item_points);
                         holder.pointsView.setTypeface(FontHelper.getComfortaa(MainActivity.this, true));
                     
@@ -510,15 +593,15 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
                                 getString(R.string.pref_htmlviewer_browser)))
                                 openURLInBrowser(getArticleViewURL(getItem(position)), MainActivity.this);
                             else
-                                openPostInApp(getItem(position), null, MainActivity.this);
+                            	openPostInApp(getItem(position), null, MainActivity.this); 
                         }
                     });
                     holder.textContainer.setOnLongClickListener(new OnLongClickListener() {
                         public boolean onLongClick(View v) {
                             final HNPost post = getItem(position);
-
+                            
                             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                            LongPressMenuListAdapter adapter = new LongPressMenuListAdapter(post);
+                            LongPressMenuListAdapter adapter = new LongPressMenuListAdapter(post,position);
                             builder.setAdapter(adapter, adapter).show();
                             return true;
                         }
@@ -559,13 +642,17 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
     }
 
     private class LongPressMenuListAdapter implements ListAdapter, DialogInterface.OnClickListener {
-
+    	
+    	
+    	
+    	
         HNPost mPost;
         boolean mIsLoggedIn;
         boolean mUpVotingEnabled;
         ArrayList<CharSequence> mItems;
-
-        public LongPressMenuListAdapter(HNPost post) {
+        int pos;
+        public LongPressMenuListAdapter(HNPost post,int position) {
+        	pos=position;
             mPost = post;
             mIsLoggedIn = Settings.isUserLoggedIn(MainActivity.this);
             mUpVotingEnabled = !mIsLoggedIn
@@ -662,7 +749,8 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
                 case 2:
                 case 3:
                 case 4:
-                    openPostInApp(mPost, getItem(item).toString(), MainActivity.this);
+                   
+                	openPostInApp(mPost, getItem(item).toString(), MainActivity.this);
                     break;
                 case 5:
                     openURLInBrowser(getArticleViewURL(mPost), MainActivity.this);
@@ -682,15 +770,20 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         a.startActivity(browserIntent);
     }
-
+//#luke0803
     public static void openPostInApp(HNPost post, String overrideHtmlProvider, Activity a) {
         Intent i = new Intent(a, ArticleReaderActivity_.class);
+        
         i.putExtra(ArticleReaderActivity.EXTRA_HNPOST, post);
         if (overrideHtmlProvider != null)
             i.putExtra(ArticleReaderActivity.EXTRA_HTMLPROVIDER_OVERRIDE, overrideHtmlProvider);
         a.startActivity(i);
     }
 
+
+    
+    
+    
     static class PostViewHolder {
         TextView titleView;
         TextView urlView;
@@ -698,7 +791,61 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
         TextView commentsCountView;
         LinearLayout textContainer;
         Button commentsButton;
+        Button starButton;
     }
 
+
 }
-//test
+
+/*
+public boolean dispatchTouchEvent(MotionEvent ev) {
+	// Log.d("ddd",String.valueOf(ev.getAction()));
+	boolean result = onTouch(ev);
+	if (!result)
+		return super.dispatchTouchEvent(ev);
+	return result;
+}
+public boolean onTouch(MotionEvent event) {
+
+	if (event.getAction() == MotionEvent.ACTION_UP) {
+		if (longClick){
+			longClick = false;
+			return false;
+		}
+		
+		if (startSlide) {
+			drag_Ex = event.getX();
+			drag_Ey = event.getY();
+			if (Math.abs(drag_Ey-drag_Sy)<=40&&drag_Ex - drag_Sx >= 100) {
+				mNav.toggleLeftDrawer();
+				return true;
+			}
+			startSlide = false;
+		}
+
+		return false;
+	}
+	if (event.getAction() == MotionEvent.ACTION_MOVE) {
+		if (!startSlide) {
+			if (Math.sqrt(Math.pow(event.getX() - drag_Sx,2)
+					+ Math.pow(event.getY() - drag_Sy, 2)) >= 10.0) {
+				drag_Sx = event.getX();
+				drag_Sy = event.getY();
+				startSlide = true;
+			}
+		}
+		return false;
+
+	}
+	if (event.getAction() == MotionEvent.ACTION_DOWN) {
+		startSlide = false;
+		drag_Sx = event.getX();
+		drag_Sy = event.getY();
+		return false;
+	}
+
+	return false;
+
+}
+
+*/
