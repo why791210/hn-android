@@ -5,24 +5,16 @@
 //       #why791210
 //		 #t800516
 
-package com.manuelmaly.hn;
+package com.manuelmaly.hn.login;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap; 
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 
-import android.R.integer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.DataSetObserver;
@@ -55,6 +47,22 @@ import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.SystemService;
 import com.googlecode.androidannotations.annotations.ViewById;
+import com.manuelmaly.hn.AboutActivity_;
+import com.manuelmaly.hn.App;
+import com.manuelmaly.hn.ArticleReaderActivity;
+import com.manuelmaly.hn.ArticleReaderActivity_;
+import com.manuelmaly.hn.BaseListActivity;
+import com.manuelmaly.hn.CommentsActivity;
+import com.manuelmaly.hn.CommentsActivity_;
+import com.manuelmaly.hn.R;
+import com.manuelmaly.hn.Settings;
+import com.manuelmaly.hn.SettingsActivity;
+import com.manuelmaly.hn.searchActivity_;
+import com.manuelmaly.hn.R.color;
+import com.manuelmaly.hn.R.drawable;
+import com.manuelmaly.hn.R.id;
+import com.manuelmaly.hn.R.layout;
+import com.manuelmaly.hn.R.string;
 import com.manuelmaly.hn.model.HNFeed;
 import com.manuelmaly.hn.model.HNPost;
 import com.manuelmaly.hn.parser.BaseHTMLParser;
@@ -66,11 +74,6 @@ import com.manuelmaly.hn.task.HNVoteTask;
 import com.manuelmaly.hn.task.ITaskFinishedHandler;
 import com.manuelmaly.hn.util.FileUtil;
 import com.manuelmaly.hn.util.FontHelper;
-import android.content.SharedPreferences;//#luke0803
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.JSONException;
-
 
 @EActivity(R.layout.main)
 public class MainActivity extends BaseListActivity implements ITaskFinishedHandler<HNFeed> {
@@ -104,23 +107,17 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
     PostsAdapter mPostsListAdapter;
     HashSet<HNPost> mUpvotedPosts;
     HashMap<String, String> hotnews_param = new HashMap<String, String>();
-    List<HNPost> mFavorite = new ArrayList<HNPost>();
 
     String mCurrentFontSize = null;
     int mFontSizeTitle;
     int mFontSizeDetails;
-    int position;
-    public static final String ARTICAL_POSITION = "NEXT_POSITION";
-    private SharedPreferences fFeed=null;
-    private JSONArray postJsonArray=null;
-    public static MainActivity instance;
+
     private static final int TASKCODE_LOAD_FEED = 10;
     private static final int TASKCODE_LOAD_MORE_POSTS = 20;
     private static final int TASKCODE_VOTE = 100;
     private static final int ACTIVITY_IDENTIFIER = 1;
     private static final int TASKCODE_LOAD_HOTNEWS = 30;
-    public static HNFeed favoritePosts;//#luke0803
-  
+    
     private static final String LIST_STATE = "listState";
     private Parcelable mListState = null;
     // #CalvinChang01
@@ -244,26 +241,6 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
             }
         });
         
-      
-        
-		// #luke0803
-		Button myfavoriteButton = (Button) moreContentView
-				.findViewById(R.id.main_more_content_myfavorite);
-		myfavoriteButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mFeed.clearPost();
-				// 讀檔指定給mFavorite，取出放進mFeed
-				mFeed.addPosts(mFavorite);
-				showFeed(mFeed);
-				popupWindow.dismiss();
-			}
-		});
-
-		popupWindow.update(moreContentView.getMeasuredWidth(),
-				moreContentView.getMeasuredHeight());
-    
-        
         // #t800516
         Button hotnewsButton = (Button) moreContentView.findViewById(R.id.main_more_content_hotnews);
         hotnewsButton.setOnClickListener(new OnClickListener() {
@@ -329,12 +306,6 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
 
     }
 
-    public static MainActivity getInstance()
-    {
-    	return instance;
-    }
-    
-    
     private void showFeed(HNFeed feed) {
         mFeed = feed;
         mPostsListAdapter.notifyDataSetChanged();
@@ -374,30 +345,6 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
         mActionbarRefreshProgress.setVisibility(View.VISIBLE);
         mActionbarRefresh.setVisibility(View.GONE);
     }
-
-    //#luke0803
-    public boolean addMYFavoritePost(int nPost)  {
-    	fFeed=getSharedPreferences("DATA",0);
-    	if(postJsonArray==null){
-    		postJsonArray = new JSONArray();
-    	}
-    	HNPost temp = mFeed.getPosts().get(nPost);
-
-
-    	JSONObject jsonObject = new JSONObject();
-    	try {
-    		jsonObject.put("url", temp.getURL());
-    		jsonObject.put("title", temp.getTitle());
-    		jsonObject.put("urlDomain", temp.getURLDomain());
-    		jsonObject.put("author", temp.getAuthor());
-    		jsonObject.put("postID", temp.getPostID());
-    		jsonObject.put("commentsCount", temp.getCommentsCount()); 
-    		jsonObject.put("points", temp.getPoints());
-    		jsonObject.put("upvoteURL", null);         
-    	} catch (JSONException e) {
-
-    		e.printStackTrace();
-    	} return false;}
     
     //#t800516
     private void startHotnewsFeedLoading() {
@@ -507,110 +454,78 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
             if (position < mFeed.getPosts().size())
                 return VIEWTYPE_POST;
             else
-            	return VIEWTYPE_LOADMORE;
+                return VIEWTYPE_LOADMORE;
         }
 
         @Override
         public int getViewTypeCount() {
-        	return 2;
+            return 2;
         }
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-        	switch (getItemViewType(position)) {
-        	case VIEWTYPE_POST:
-        		if (convertView == null) {
-        			convertView = (LinearLayout) mInflater.inflate(R.layout.main_list_item, null);
-        			PostViewHolder holder = new PostViewHolder();
-        			holder.titleView = (TextView) convertView.findViewById(R.id.main_list_item_title);
-        			holder.urlView = (TextView) convertView.findViewById(R.id.main_list_item_url);
-        			holder.textContainer = (LinearLayout) convertView
-        					.findViewById(R.id.main_list_item_textcontainer);
-        			holder.commentsButton = (Button) convertView.findViewById(R.id.main_list_item_comments_button);
-        			holder.commentsButton.setTypeface(FontHelper.getComfortaa(MainActivity.this, false));
-        			holder.pointsView = (TextView) convertView.findViewById(R.id.main_list_item_points);
-        			holder.pointsView.setTypeface(FontHelper.getComfortaa(MainActivity.this, true));
-        			convertView.setTag(holder);
-        			//#luke0803
-        			holder.starButton = (Button) convertView.findViewById(R.id.main_list_item_favorite_button);               
-        		}
-
-        		HNPost item = getItem(position);
-        		PostViewHolder holder = (PostViewHolder) convertView.getTag();
-        		holder.titleView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, mFontSizeTitle);
-        		holder.titleView.setText(item.getTitle());
-        		holder.urlView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, mFontSizeDetails);
-        		holder.urlView.setText(item.getURLDomain());
-        		holder.pointsView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, mFontSizeDetails);
-        		if (item.getPoints() != BaseHTMLParser.UNDEFINED)
-        			holder.pointsView.setText(item.getPoints() + "");
-        		else
-        			holder.pointsView.setText("-");
-
-        		holder.commentsButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, mFontSizeTitle);
-        		if (item.getCommentsCount() != BaseHTMLParser.UNDEFINED) {
-        			holder.commentsButton.setVisibility(View.VISIBLE);
-        			holder.commentsButton.setText(item.getCommentsCount() + "");
-        		} else
-        			holder.commentsButton.setVisibility(View.INVISIBLE);
-        		holder.commentsButton.setOnClickListener(new OnClickListener() {
-        			public void onClick(View v) {
-        				Intent i = new Intent(MainActivity.this, CommentsActivity_.class);
-        				i.putExtra(CommentsActivity.EXTRA_HNPOST, getItem(position));
-        				startActivity(i);
-        			}
-        		});
-        		holder.textContainer.setOnClickListener(new OnClickListener() {
-        			public void onClick(View v) {
-        				if (Settings.getHtmlViewer(MainActivity.this).equals(
-        						getString(R.string.pref_htmlviewer_browser)))
-        					openURLInBrowser(getArticleViewURL(getItem(position)), MainActivity.this);
-        				else
-        					openPostInApp(getItem(position), null, MainActivity.this); 
-        			}
-        		});
-        		holder.textContainer.setOnLongClickListener(new OnLongClickListener() {
-        			public boolean onLongClick(View v) {
-        				final HNPost post = getItem(position);
-
-        				AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        				LongPressMenuListAdapter adapter = new LongPressMenuListAdapter(post,position);
-        				builder.setAdapter(adapter, adapter).show();
-        				return true;
-        			}
-        		});
-        		//#luke0803
-        		holder.starButton.setOnClickListener(new OnClickListener() {
-        			public void onClick(View v) {
-        				//add HNPost to mFavorite list
-        				String filename = "MyFavorite";
-        				
-						try {
-							FileInputStream reader = openFileInput(filename);
-	        				ObjectInputStream in = new ObjectInputStream(reader);
-	        				mFavorite = (List<HNPost>) in.readObject();
-						} 
-						catch (Exception e1) {
-							e1.printStackTrace();
-						}
-        				
-						mFavorite.add(getItem(position));
-						
-        				try {
-            				FileOutputStream writer = openFileOutput(filename, Context.MODE_PRIVATE);
-        					ObjectOutputStream out = new ObjectOutputStream(writer);
-        					out.writeObject(mFavorite);
-        					out.close();
-        				} 
-        				catch (Exception e) {
-        					e.printStackTrace();
-        				}
-        				
-        				Toast.makeText(MainActivity.this, "Already add to the My_Favorite",
-        						Toast.LENGTH_SHORT).show();
-        			}
-        		});
+            switch (getItemViewType(position)) {
+                case VIEWTYPE_POST:
+                    if (convertView == null) {
+                        convertView = (LinearLayout) mInflater.inflate(R.layout.main_list_item, null);
+                        PostViewHolder holder = new PostViewHolder();
+                        holder.titleView = (TextView) convertView.findViewById(R.id.main_list_item_title);
+                        holder.urlView = (TextView) convertView.findViewById(R.id.main_list_item_url);
+                        holder.textContainer = (LinearLayout) convertView
+                            .findViewById(R.id.main_list_item_textcontainer);
+                        holder.commentsButton = (Button) convertView.findViewById(R.id.main_list_item_comments_button);
+                        holder.commentsButton.setTypeface(FontHelper.getComfortaa(MainActivity.this, false));
+                        holder.pointsView = (TextView) convertView.findViewById(R.id.main_list_item_points);
+                        holder.pointsView.setTypeface(FontHelper.getComfortaa(MainActivity.this, true));
                     
+                        
+                        convertView.setTag(holder);
+                    }
+
+                    HNPost item = getItem(position);
+                    PostViewHolder holder = (PostViewHolder) convertView.getTag();
+                    holder.titleView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, mFontSizeTitle);
+                    holder.titleView.setText(item.getTitle());
+                    holder.urlView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, mFontSizeDetails);
+                    holder.urlView.setText(item.getURLDomain());
+                    holder.pointsView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, mFontSizeDetails);
+                    if (item.getPoints() != BaseHTMLParser.UNDEFINED)
+                        holder.pointsView.setText(item.getPoints() + "");
+                    else
+                        holder.pointsView.setText("-");
+
+                    holder.commentsButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, mFontSizeTitle);
+                    if (item.getCommentsCount() != BaseHTMLParser.UNDEFINED) {
+                        holder.commentsButton.setVisibility(View.VISIBLE);
+                        holder.commentsButton.setText(item.getCommentsCount() + "");
+                    } else
+                        holder.commentsButton.setVisibility(View.INVISIBLE);
+                    holder.commentsButton.setOnClickListener(new OnClickListener() {
+                        public void onClick(View v) {
+                            Intent i = new Intent(MainActivity.this, CommentsActivity_.class);
+                            i.putExtra(CommentsActivity.EXTRA_HNPOST, getItem(position));
+                            startActivity(i);
+                        }
+                    });
+                    holder.textContainer.setOnClickListener(new OnClickListener() {
+                        public void onClick(View v) {
+                            if (Settings.getHtmlViewer(MainActivity.this).equals(
+                                getString(R.string.pref_htmlviewer_browser)))
+                                openURLInBrowser(getArticleViewURL(getItem(position)), MainActivity.this);
+                            else
+                                openPostInApp(getItem(position), null, MainActivity.this);
+                        }
+                    });
+                    holder.textContainer.setOnLongClickListener(new OnLongClickListener() {
+                        public boolean onLongClick(View v) {
+                            final HNPost post = getItem(position);
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                            LongPressMenuListAdapter adapter = new LongPressMenuListAdapter(post);
+                            builder.setAdapter(adapter, adapter).show();
+                            return true;
+                        }
+                    });
                     break;
 
                 case VIEWTYPE_LOADMORE:
@@ -647,17 +562,13 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
     }
 
     private class LongPressMenuListAdapter implements ListAdapter, DialogInterface.OnClickListener {
-    	
-    	
-    	
-    	
+
         HNPost mPost;
         boolean mIsLoggedIn;
         boolean mUpVotingEnabled;
         ArrayList<CharSequence> mItems;
-        int pos;
-        public LongPressMenuListAdapter(HNPost post,int position) {
-        	pos=position;
+
+        public LongPressMenuListAdapter(HNPost post) {
             mPost = post;
             mIsLoggedIn = Settings.isUserLoggedIn(MainActivity.this);
             mUpVotingEnabled = !mIsLoggedIn
@@ -754,7 +665,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
                 case 2:
                 case 3:
                 case 4:
-                	openPostInApp(mPost, getItem(item).toString(), MainActivity.this);
+                    openPostInApp(mPost, getItem(item).toString(), MainActivity.this);
                     break;
                 case 5:
                     openURLInBrowser(getArticleViewURL(mPost), MainActivity.this);
@@ -774,20 +685,15 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         a.startActivity(browserIntent);
     }
-//#luke0803
+
     public static void openPostInApp(HNPost post, String overrideHtmlProvider, Activity a) {
         Intent i = new Intent(a, ArticleReaderActivity_.class);
-        
         i.putExtra(ArticleReaderActivity.EXTRA_HNPOST, post);
         if (overrideHtmlProvider != null)
             i.putExtra(ArticleReaderActivity.EXTRA_HTMLPROVIDER_OVERRIDE, overrideHtmlProvider);
         a.startActivity(i);
     }
 
-
-    
-    
-    
     static class PostViewHolder {
         TextView titleView;
         TextView urlView;
@@ -795,61 +701,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
         TextView commentsCountView;
         LinearLayout textContainer;
         Button commentsButton;
-        Button starButton;//#luke0803
     }
 
-
 }
-
-/*
-public boolean dispatchTouchEvent(MotionEvent ev) {
-	// Log.d("ddd",String.valueOf(ev.getAction()));
-	boolean result = onTouch(ev);
-	if (!result)
-		return super.dispatchTouchEvent(ev);
-	return result;
-}
-public boolean onTouch(MotionEvent event) {
-
-	if (event.getAction() == MotionEvent.ACTION_UP) {
-		if (longClick){
-			longClick = false;
-			return false;
-		}
-		
-		if (startSlide) {
-			drag_Ex = event.getX();
-			drag_Ey = event.getY();
-			if (Math.abs(drag_Ey-drag_Sy)<=40&&drag_Ex - drag_Sx >= 100) {
-				mNav.toggleLeftDrawer();
-				return true;
-			}
-			startSlide = false;
-		}
-
-		return false;
-	}
-	if (event.getAction() == MotionEvent.ACTION_MOVE) {
-		if (!startSlide) {
-			if (Math.sqrt(Math.pow(event.getX() - drag_Sx,2)
-					+ Math.pow(event.getY() - drag_Sy, 2)) >= 10.0) {
-				drag_Sx = event.getX();
-				drag_Sy = event.getY();
-				startSlide = true;
-			}
-		}
-		return false;
-
-	}
-	if (event.getAction() == MotionEvent.ACTION_DOWN) {
-		startSlide = false;
-		drag_Sx = event.getX();
-		drag_Sy = event.getY();
-		return false;
-	}
-
-	return false;
-
-}
-
-*/
+//test3

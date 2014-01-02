@@ -33,12 +33,12 @@ public class ArticleReaderActivity extends Activity {
     private static final String WEB_VIEW_SAVED_STATE_KEY = "webViewSavedState";
     public static final String EXTRA_HNPOST = "HNPOST";
     public static final String EXTRA_HTMLPROVIDER_OVERRIDE = "HTMLPROVIDER_OVERRIDE";
-    
+    public static final String EXTRA_POSITION = "NEXT_POSITION";//#luke0803
     private static final String HTMLPROVIDER_PREFIX_VIEWTEXT = "http://viewtext.org/article?url=";
     private static final String HTMLPROVIDER_PREFIX_GOOGLE = "http://www.google.com/gwt/x?u=";
     private static final String HTMLPROVIDER_PREFIX_INSTAPAPER = "http://www.instapaper.com/text?u=";
     
-    public static final String EXTRA_POSITION = "NEXT_POSITION";//#luke0803
+    
     @ViewById(R.id.article_webview)
     WebView mWebView;
 

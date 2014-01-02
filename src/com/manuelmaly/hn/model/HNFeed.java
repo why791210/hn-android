@@ -34,7 +34,7 @@ public class HNFeed implements Serializable {
     
     public List<HNPost> getPosts() {
         return mPosts;
-    }
+    }//
     
     public void addPosts(Collection<HNPost> posts) {
         mPosts.addAll(posts);
