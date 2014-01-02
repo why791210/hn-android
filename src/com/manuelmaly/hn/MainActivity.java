@@ -7,17 +7,20 @@
 
 package com.manuelmaly.hn;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import android.R.array;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -101,6 +104,9 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
     private static final int TASKCODE_VOTE = 100;
     private static final int ACTIVITY_IDENTIFIER = 1;
     private static final int TASKCODE_LOAD_HOTNEWS = 30;
+    
+    private static final ArrayList<HNPost> myStringList = new ArrayList<HNPost>();  //#yincyee
+    
     
     private static final String LIST_STATE = "listState";
     private Parcelable mListState = null;
@@ -470,6 +476,13 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
                     PostViewHolder holder = (PostViewHolder) convertView.getTag();
                     holder.titleView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, mFontSizeTitle);
                     holder.titleView.setText(item.getTitle());
+                    //#yincyee
+                    if(myStringList.contains(item))
+                    {                 
+                    	holder.titleView.setBackgroundColor(Color.GRAY);
+                    }
+                    
+                    
                     holder.urlView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, mFontSizeDetails);
                     holder.urlView.setText(item.getURLDomain());
                     holder.pointsView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, mFontSizeDetails);
@@ -493,9 +506,16 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
                     });
                     holder.textContainer.setOnClickListener(new OnClickListener() {
                         public void onClick(View v) {
+                        	 //#yincyee
+                        	myStringList.add(getItem(position));
                             if (Settings.getHtmlViewer(MainActivity.this).equals(
-                                getString(R.string.pref_htmlviewer_browser)))
+                                getString(R.string.pref_htmlviewer_browser)))  
+                            {
+                            	//myStringList.add(getItem(position));
+                            	//holder.titleView.setBackgroundColor(Color.BLUE);
+                            	
                                 openURLInBrowser(getArticleViewURL(getItem(position)), MainActivity.this);
+                            }
                             else
                                 openPostInApp(getItem(position), null, MainActivity.this);
                         }
@@ -652,6 +672,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
                     openPostInApp(mPost, getItem(item).toString(), MainActivity.this);
                     break;
                 case 5:
+                	
                     openURLInBrowser(getArticleViewURL(mPost), MainActivity.this);
                     break;
                 default:
