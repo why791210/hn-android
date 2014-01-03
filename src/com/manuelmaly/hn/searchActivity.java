@@ -4,7 +4,10 @@ import java.util.HashMap;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
@@ -48,7 +51,18 @@ public class searchActivity extends Activity implements ITaskFinishedHandler<HNF
     void searchButtonClicked() {
     	String searchString = mSearchName.getText().toString();
     	HashMap<String, String> param = new HashMap<String, String>();
-    	
+    	//check Internet
+    	if (connect_Internet()==false)
+    	{
+    		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        	builder
+        	.setTitle("Info")
+        	.setMessage("Please check your Internet ")
+        	.setIcon(android.R.drawable.ic_dialog_info)
+        	.setNegativeButton("OK", null)						//Do nothing on no
+        	.show();
+    		return ;
+    	}
     	// check empty.
     	if(TextUtils.isEmpty(searchString))
     	{
@@ -79,6 +93,31 @@ public class searchActivity extends Activity implements ITaskFinishedHandler<HNF
     	HNFeedTaskSearch.start(this, this, TASKCODE_SEARCH, param);
     	
     }
+    //why791210_102522113
+    private boolean connect_Internet()
+    {
+    	boolean result = false;
+    	ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE); 
+    	NetworkInfo info=connManager.getActiveNetworkInfo();
+    	if (info == null || !info.isConnected())
+    	{
+    		result = false;
+    	}
+    	else 
+    	{
+    		if (!info.isAvailable())
+    		{
+    			result =false;
+    		}
+    		else
+    		{
+    			result = true;
+    		}
+    	}
+    	
+    	return result;
+    }
+    
     
     // finish handler # Calvin Chang
     @Override
