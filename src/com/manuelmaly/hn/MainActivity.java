@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 import android.R.array;
 import android.app.Activity;
@@ -454,6 +455,9 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
+        	        	
+        	
+        	
             switch (getItemViewType(position)) {
                 case VIEWTYPE_POST:
                     if (convertView == null) {
@@ -477,11 +481,21 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
                     holder.titleView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, mFontSizeTitle);
                     holder.titleView.setText(item.getTitle());
                     //#yincyee
-                    if(myStringList.contains(item))
-                    {                 
-                    	holder.titleView.setBackgroundColor(Color.GRAY);
-                    }
                     
+                    if(myStringList.contains(getItem(position)))
+                    {      
+                    	for (HNPost check : myStringList)
+                    	if(check.getTitle() == (item.getTitle()))
+                    	{
+                    		holder.titleView.setBackgroundColor(Color.GRAY);
+                    		//view.setTextColor(getResources().getColor(android.R.color.darker_gray));
+                    		
+                    	}      
+                    	//else
+                    		//break;
+                    }
+                    else
+                    	holder.titleView.setBackgroundColor(0);
                     
                     holder.urlView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, mFontSizeDetails);
                     holder.urlView.setText(item.getURLDomain());
@@ -508,8 +522,8 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
                         public void onClick(View v) {
                         	 //#yincyee
                         	myStringList.add(getItem(position));
-                            if (Settings.getHtmlViewer(MainActivity.this).equals(
-                                getString(R.string.pref_htmlviewer_browser)))  
+                        	
+                            if (Settings.getHtmlViewer(MainActivity.this).equals(getString(R.string.pref_htmlviewer_browser)))  
                             {
                             	//myStringList.add(getItem(position));
                             	//holder.titleView.setBackgroundColor(Color.BLUE);
