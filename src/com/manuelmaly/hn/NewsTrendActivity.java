@@ -1,6 +1,8 @@
 package com.manuelmaly.hn;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -63,15 +65,19 @@ public class NewsTrendActivity extends BaseListActivity implements ITaskFinished
 	@ViewById(R.id.actionbar_back)
 	ImageView mActionbarBack;
 
-	//@ViewById(R.id.graph)
-	//LinearLayout gragh;
+	@ViewById(R.id.graph)
+	LinearLayout gragh;
 	
 	@ViewById(R.id.newstrend_list)
 	ListView newstrend_list;
 
 	public static final String EXTRA_HNPOST = "HNPOST";
 	ArrayList<String> list = new ArrayList<String>();
+	List<Integer> minuteAgo = new ArrayList<Integer>();
+	List<Integer> hourAgo = new ArrayList<Integer>();
+	List<Integer> dayAgo = new ArrayList<Integer>();
 	String[] timeAgo;
+	Integer[] drawhours = new Integer[24];
    
     HNPost mPost;
     HNPostComments mComments;
@@ -187,21 +193,52 @@ public class NewsTrendActivity extends BaseListActivity implements ITaskFinished
     	
     	timeAgo = new String[mCommentsCache.size()];
     	
+    	drawhours = new Integer[]{0};
+    	
+    	// XX minute(s)/hour(s)/day(s) ago
 		if (mCommentsCache != null) {
 			for (int i = 0; i < mCommentsCache.size(); i++)
-				timeAgo[i] = mCommentsCache.get(i).getTimeAgo();
+			{
+				String timeAgostr = mCommentsCache.get(i).getTimeAgo();
+				//timeAgo[i] = timeAgostr;
+				if(timeAgostr.contains("minute"))
+				{
+					int endofnum = timeAgostr.indexOf("minute");
+					//add number
+					minuteAgo.add(Integer.valueOf(timeAgostr.substring(1, endofnum-1)));
+				}
+				else if(timeAgostr.contains("hour"))
+				{
+					int endofnum = timeAgostr.indexOf("hour");
+					//add number
+					hourAgo.add(Integer.valueOf(timeAgostr.substring(1, endofnum-1)));
+				}
+				else
+				{
+					int endofnum = timeAgostr.indexOf("day");
+					//add number
+					dayAgo.add(Integer.valueOf(timeAgostr.substring(1, endofnum-1)));
+				}
+			}
 		}
 		
-    	newstrend_list.setAdapter(new ArrayAdapter<String>(this,
-    			 android.R.layout.simple_list_item_1, timeAgo));
+		Collections.sort(hourAgo,new Comparator<Integer>(){
+			public int compare(Integer o1, Integer o2) {
+                return o1 - o2;
+            }
+		});
+		
+    	newstrend_list.setAdapter(new ArrayAdapter<Integer>(this,
+    			 android.R.layout.simple_list_item_1, hourAgo));
     	
     	newstrend_list.setTextFilterEnabled(true);
+    	
     	/*GraphViewSeries exampleSeries = new GraphViewSeries(new GraphViewData[] {
     	    	for(int i = 0; i < mCommentsCache.size(); i++)
     	    	{
-    	    		new GraphViewData(i, mCommentsCache.get(i).getTimeAgo().);
+    	    		new GraphViewData(i, mCommentsCache.get(i).getTimeAgo());
     	    	}
-				//new GraphViewData(1, 2.0d)
+				new GraphViewData(1, 2.0d)
 				//, new GraphViewData(2, 1.5d)
 		});
 
