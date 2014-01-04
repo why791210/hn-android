@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
@@ -40,6 +42,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
+import java.util.Dictionary;
 
 @EActivity(R.layout.newstrend)
 public class NewsTrendActivity extends BaseListActivity implements ITaskFinishedHandler<HNPostComments> {
@@ -73,9 +76,9 @@ public class NewsTrendActivity extends BaseListActivity implements ITaskFinished
 
 	public static final String EXTRA_HNPOST = "HNPOST";
 	ArrayList<String> list = new ArrayList<String>();
-	List<Integer> minuteAgo = new ArrayList<Integer>();
-	List<Integer> hourAgo = new ArrayList<Integer>();
-	List<Integer> dayAgo = new ArrayList<Integer>();
+	Map<Integer, Integer> minuteAgo = new Hashtable<Integer, Integer>();
+	Map<Integer, Integer> hourAgo = new Hashtable<Integer, Integer>();
+	Map<Integer, Integer> dayAgo = new Hashtable<Integer, Integer>();
 	String[] timeAgo;
 	Integer[] drawhours = new Integer[24];
    
@@ -200,36 +203,81 @@ public class NewsTrendActivity extends BaseListActivity implements ITaskFinished
 			for (int i = 0; i < mCommentsCache.size(); i++)
 			{
 				String timeAgostr = mCommentsCache.get(i).getTimeAgo();
+				Integer key;
+				Integer value;
 				//timeAgo[i] = timeAgostr;
 				if(timeAgostr.contains("minute"))
 				{
 					int endofnum = timeAgostr.indexOf("minute");
 					//add number
-					minuteAgo.add(Integer.valueOf(timeAgostr.substring(1, endofnum-1)));
+					key = Integer.valueOf(timeAgostr.substring(1, endofnum-1));
+					value = minuteAgo.get(key);
+					// process minute
+					if(value == null)
+						minuteAgo.put(key, 0) ;
+					else
+						value = Integer.valueOf(value.intValue() + 1);
+					
+					// process hour
+					key = Integer.valueOf(1);
+					value = hourAgo.get(key);
+					if(value == null)
+						hourAgo.put(key, 0) ;
+					else
+						value = Integer.valueOf(value.intValue() + 1);
+					
+					// process day
+					value = dayAgo.get(key);
+					if(value == null)
+						dayAgo.put(key, 0) ;
+					else
+						value = Integer.valueOf(value.intValue() + 1);					
 				}
 				else if(timeAgostr.contains("hour"))
 				{
 					int endofnum = timeAgostr.indexOf("hour");
 					//add number
-					hourAgo.add(Integer.valueOf(timeAgostr.substring(1, endofnum-1)));
+					//hourAgo.add(Integer.valueOf(timeAgostr.substring(1, endofnum-1)));
+					// process hour
+					key = Integer.valueOf(timeAgostr.substring(1, endofnum-1));
+					value = hourAgo.get(key);
+					if(value == null)
+						hourAgo.put(key, 0) ;
+					else
+						value = Integer.valueOf(value.intValue() + 1);
+					
+					// process day
+					key = Integer.valueOf(1);
+					value = dayAgo.get(key);
+					if(value == null)
+						dayAgo.put(key, 0) ;
+					else
+						value = Integer.valueOf(value.intValue() + 1);						
 				}
 				else
 				{
 					int endofnum = timeAgostr.indexOf("day");
 					//add number
-					dayAgo.add(Integer.valueOf(timeAgostr.substring(1, endofnum-1)));
+					//dayAgo.add(Integer.valueOf(timeAgostr.substring(1, endofnum-1)));
+					// process day
+					key = Integer.valueOf(timeAgostr.substring(1, endofnum-1));
+					value = dayAgo.get(key);
+					if(value == null)
+						dayAgo.put(key, 0) ;
+					else
+						value = Integer.valueOf(value.intValue() + 1);
 				}
 			}
 		}
-		
+		/*
 		Collections.sort(hourAgo,new Comparator<Integer>(){
 			public int compare(Integer o1, Integer o2) {
                 return o1 - o2;
             }
-		});
-		
+		});*/
+		// (Integer [])((Hashtable)hourAgo).values().toArray()
     	newstrend_list.setAdapter(new ArrayAdapter<Integer>(this,
-    			 android.R.layout.simple_list_item_1, hourAgo));
+    			 android.R.layout.simple_list_item_1, new ArrayList<Integer>(hourAgo.values()) ));
     	
     	newstrend_list.setTextFilterEnabled(true);
     	
