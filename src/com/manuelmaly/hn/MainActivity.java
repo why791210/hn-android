@@ -64,6 +64,7 @@ import com.manuelmaly.hn.model.HNFeed;
 import com.manuelmaly.hn.model.HNPost;
 import com.manuelmaly.hn.parser.BaseHTMLParser;
 import com.manuelmaly.hn.server.HNCredentials;
+import com.manuelmaly.hn.task.HNFeedTaskHotnews;
 import com.manuelmaly.hn.task.HNFeedTaskLoadMore;
 import com.manuelmaly.hn.task.HNFeedTaskMainFeed;
 import com.manuelmaly.hn.task.HNVoteTask;
@@ -258,8 +259,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
       
         
 		// #luke0803
-		Button myfavoriteButton = (Button) moreContentView
-				.findViewById(R.id.main_more_content_myfavorite);
+		Button myfavoriteButton = (Button) moreContentView.findViewById(R.id.main_more_content_myfavorite);
 		myfavoriteButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -429,7 +429,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
 		hotnews_param.put("boosts[fields][num_comments]", "0.15");
     	hotnews_param.put("boosts[functions][pow(2,div(div(ms(create_ts,NOW),3600000),72))]", "200.00");
     	hotnews_param.put("pretty_print", "true");
-       // HNFeedTaskHotnews.start(this, this, TASKCODE_LOAD_HOTNEWS, hotnews_param);
+        HNFeedTaskHotnews.start(this, this, TASKCODE_LOAD_HOTNEWS, hotnews_param);
         mActionbarRefresh.setImageResource(R.drawable.refresh);
         
         mActionbarRefreshProgress.setVisibility(View.VISIBLE);
