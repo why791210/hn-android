@@ -8,23 +8,26 @@
 package com.manuelmaly.hn;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap; 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import android.R.integer;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;//#luke0803
 import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -67,10 +70,6 @@ import com.manuelmaly.hn.task.HNVoteTask;
 import com.manuelmaly.hn.task.ITaskFinishedHandler;
 import com.manuelmaly.hn.util.FileUtil;
 import com.manuelmaly.hn.util.FontHelper;
-import android.content.SharedPreferences;//#luke0803
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.JSONException;
 
 
 @EActivity(R.layout.main)
@@ -120,15 +119,15 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
     private static final int TASKCODE_VOTE = 100;
     private static final int ACTIVITY_IDENTIFIER = 1;
     private static final int TASKCODE_LOAD_HOTNEWS = 30;
-<<<<<<< HEAD
+
     
     private static final ArrayList<HNPost> myStringList = new ArrayList<HNPost>();  //#yincyee
     
     
-=======
+
     public static HNFeed favoritePosts;//#luke0803
   
->>>>>>> 93384a83573aabc320f2dc4578f9cf17aa26e2d5
+
     private static final String LIST_STATE = "listState";
     private Parcelable mListState = null;
     // #CalvinChang01
@@ -199,13 +198,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
     
     //#why791210
     @Click(R.id.homeicon)
-<<<<<<< HEAD
-    void homeClick() {
-    	if (HNFeedTaskMainFeed.isRunning(getApplicationContext()))
-    		HNFeedTaskMainFeed.stopCurrent(getApplicationContext());
-    	else
-    		startFeedLoading();
-=======
+
        void homeClick() {
           if (HNFeedTaskMainFeed.isRunning(getApplicationContext()))
                 HNFeedTaskMainFeed.stopCurrent(getApplicationContext());
@@ -256,7 +249,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
             public void onClick(View v) {
             	//mFeed
             	Intent intent = new Intent();
-                intent.setClass(MainActivity.this, searchActivity_.class);
+                intent.setClass(MainActivity.this, SearchActivity_.class);
                 startActivityForResult(intent, ACTIVITY_IDENTIFIER);
                 popupWindow.dismiss();
             }
@@ -295,71 +288,10 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
             	popupWindow.dismiss();
             }
         });
->>>>>>> 93384a83573aabc320f2dc4578f9cf17aa26e2d5
+
 
     }
-    @Click(R.id.actionbar_more)
-    void moreClicked() {
-    	mActionbarMore.setSelected(true);
-    	LinearLayout moreContentView = (LinearLayout) mInflater.inflate(R.layout.main_more_content, null);
-
-    	moreContentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-    	final PopupWindow popupWindow = new PopupWindow(this);
-    	popupWindow.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.red_dark_washedout)));
-    	popupWindow.setContentView(moreContentView);
-    	popupWindow.showAsDropDown(mActionbarMore);
-    	popupWindow.setTouchable(true);
-    	popupWindow.setFocusable(true);
-    	popupWindow.setOutsideTouchable(true);
-    	popupWindow.setOnDismissListener(new OnDismissListener() {
-    		public void onDismiss() {
-    			mActionbarMore.setSelected(false);
-    		}
-    	});
-
-    	Button aboutButton = (Button) moreContentView.findViewById(R.id.main_more_content_about);
-    	aboutButton.setOnClickListener(new OnClickListener() {
-    		@Override
-    		public void onClick(View v) {
-    			startActivity(new Intent(MainActivity.this, AboutActivity_.class));
-    			popupWindow.dismiss();
-    		}
-    	});
-
-    	Button settingsButton = (Button) moreContentView.findViewById(R.id.main_more_content_settings);
-    	settingsButton.setOnClickListener(new OnClickListener() {
-    		@Override
-    		public void onClick(View v) {
-    			startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-    			popupWindow.dismiss();
-    		}
-    	});
-    	//#why791210
-    	Button searchButton = (Button) moreContentView.findViewById(R.id.main_more_content_search);
-    	searchButton.setOnClickListener(new OnClickListener() {
-    		@Override
-    		public void onClick(View v) {
-    			//mFeed
-    			Intent intent = new Intent();
-    			intent.setClass(MainActivity.this, SearchActivity_.class);
-    			startActivityForResult(intent, ACTIVITY_IDENTIFIER);
-    			popupWindow.dismiss();
-    		}
-    	});
-
-    	//#t800516
-    	Button hotnewsButton = (Button) moreContentView.findViewById(R.id.main_more_content_hotnews);
-    	hotnewsButton.setOnClickListener(new OnClickListener() {
-    		@Override
-    		public void onClick(View v) {
-    			startHotnewsFeedLoading();
-    			popupWindow.dismiss();
-    		}
-    	});
-
-    	popupWindow.update(moreContentView.getMeasuredWidth(), moreContentView.getMeasuredHeight());
-    }    
-    // #CalvinChang03
+    
 
     @Override 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {	
@@ -600,10 +532,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-<<<<<<< HEAD
-        	        	
-        	
-        	
+
             switch (getItemViewType(position)) {
                 case VIEWTYPE_POST:
                     if (convertView == null) {
@@ -617,7 +546,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
                         holder.pointsView = (TextView) convertView.findViewById(R.id.main_list_item_points);
                         holder.pointsView.setTypeface(FontHelper.getComfortaa(MainActivity.this, true));
                         holder.newstrendButton = (ImageButton) convertView.findViewById(R.id.main_list_item_newstrend_button);
-                        
+                        holder.starButton = (Button) convertView.findViewById(R.id.main_list_item_favorite_button);
                         convertView.setTag(holder);
                     }
 
@@ -684,7 +613,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
                             final HNPost post = getItem(position);
 
                             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                            LongPressMenuListAdapter adapter = new LongPressMenuListAdapter(post);
+                            LongPressMenuListAdapter adapter = new LongPressMenuListAdapter(post, position);
                             builder.setAdapter(adapter, adapter).show();
                             return true;
                         }
@@ -697,106 +626,42 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
                     		startActivity(i);
                     	}
                     });
-=======
-        	switch (getItemViewType(position)) {
-        	case VIEWTYPE_POST:
-        		if (convertView == null) {
-        			convertView = (LinearLayout) mInflater.inflate(R.layout.main_list_item, null);
-        			PostViewHolder holder = new PostViewHolder();
-        			holder.titleView = (TextView) convertView.findViewById(R.id.main_list_item_title);
-        			holder.urlView = (TextView) convertView.findViewById(R.id.main_list_item_url);
-        			holder.textContainer = (LinearLayout) convertView
-        					.findViewById(R.id.main_list_item_textcontainer);
-        			holder.commentsButton = (Button) convertView.findViewById(R.id.main_list_item_comments_button);
-        			holder.commentsButton.setTypeface(FontHelper.getComfortaa(MainActivity.this, false));
-        			holder.pointsView = (TextView) convertView.findViewById(R.id.main_list_item_points);
-        			holder.pointsView.setTypeface(FontHelper.getComfortaa(MainActivity.this, true));
-        			convertView.setTag(holder);
-        			//#luke0803
-        			holder.starButton = (Button) convertView.findViewById(R.id.main_list_item_favorite_button);               
-        		}
+                  //#luke0803
+            		holder.starButton.setOnClickListener(new OnClickListener() {
+            			public void onClick(View v) {
+            				AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);	//main是class name
+            				builder.setTitle("加入到我的最愛成功");
+            				builder.setPositiveButton("OK", null);
+            				builder.show();
+            				//add HNPost to mFavorite list
+            				String filename = "MyFavorite";
+            				
+    						try {
+    							FileInputStream reader = openFileInput(filename);
+    	        				ObjectInputStream in = new ObjectInputStream(reader);
+    	        				mFavorite = (List<HNPost>) in.readObject();
+    						} 
+    						catch (Exception e1) {
+    							e1.printStackTrace();
+    						}
+            				
+    						mFavorite.add(getItem(position));
+    						
+            				try {
+                				FileOutputStream writer = openFileOutput(filename, Context.MODE_PRIVATE);
+            					ObjectOutputStream out = new ObjectOutputStream(writer);
+            					out.writeObject(mFavorite);
+            					out.close();
+            				} 
+            				catch (Exception e) {
+            					e.printStackTrace();
+            				}
+            				
+            				Toast.makeText(MainActivity.this, "Already add to the My_Favorite",
+            						Toast.LENGTH_SHORT).show();
+            			}
+            		});
 
-        		HNPost item = getItem(position);
-        		PostViewHolder holder = (PostViewHolder) convertView.getTag();
-        		holder.titleView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, mFontSizeTitle);
-        		holder.titleView.setText(item.getTitle());
-        		holder.urlView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, mFontSizeDetails);
-        		holder.urlView.setText(item.getURLDomain());
-        		holder.pointsView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, mFontSizeDetails);
-        		if (item.getPoints() != BaseHTMLParser.UNDEFINED)
-        			holder.pointsView.setText(item.getPoints() + "");
-        		else
-        			holder.pointsView.setText("-");
-
-        		holder.commentsButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, mFontSizeTitle);
-        		if (item.getCommentsCount() != BaseHTMLParser.UNDEFINED) {
-        			holder.commentsButton.setVisibility(View.VISIBLE);
-        			holder.commentsButton.setText(item.getCommentsCount() + "");
-        		} else
-        			holder.commentsButton.setVisibility(View.INVISIBLE);
-        		holder.commentsButton.setOnClickListener(new OnClickListener() {
-        			public void onClick(View v) {
-        				Intent i = new Intent(MainActivity.this, CommentsActivity_.class);
-        				i.putExtra(CommentsActivity.EXTRA_HNPOST, getItem(position));
-        				startActivity(i);
-        			}
-        		});
-        		holder.textContainer.setOnClickListener(new OnClickListener() {
-        			public void onClick(View v) {
-        				if (Settings.getHtmlViewer(MainActivity.this).equals(
-        						getString(R.string.pref_htmlviewer_browser)))
-        					openURLInBrowser(getArticleViewURL(getItem(position)), MainActivity.this);
-        				else
-        					openPostInApp(getItem(position), null, MainActivity.this); 
-        			}
-        		});
-        		holder.textContainer.setOnLongClickListener(new OnLongClickListener() {
-        			public boolean onLongClick(View v) {
-        				final HNPost post = getItem(position);
-
-        				AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        				LongPressMenuListAdapter adapter = new LongPressMenuListAdapter(post,position);
-        				builder.setAdapter(adapter, adapter).show();
-        				return true;
-        			}
-        		});
-        		//#luke0803
-        		holder.starButton.setOnClickListener(new OnClickListener() {
-        			public void onClick(View v) {
-        				AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);	//main是class name
-        				builder.setTitle("加入到我的最愛成功");
-        				builder.setPositiveButton("OK", null);
-        				builder.show();
-        				//add HNPost to mFavorite list
-        				String filename = "MyFavorite";
-        				
-						try {
-							FileInputStream reader = openFileInput(filename);
-	        				ObjectInputStream in = new ObjectInputStream(reader);
-	        				mFavorite = (List<HNPost>) in.readObject();
-						} 
-						catch (Exception e1) {
-							e1.printStackTrace();
-						}
-        				
-						mFavorite.add(getItem(position));
-						
-        				try {
-            				FileOutputStream writer = openFileOutput(filename, Context.MODE_PRIVATE);
-        					ObjectOutputStream out = new ObjectOutputStream(writer);
-        					out.writeObject(mFavorite);
-        					out.close();
-        				} 
-        				catch (Exception e) {
-        					e.printStackTrace();
-        				}
-        				
-        				Toast.makeText(MainActivity.this, "Already add to the My_Favorite",
-        						Toast.LENGTH_SHORT).show();
-        			}
-        		});
-                    
->>>>>>> 93384a83573aabc320f2dc4578f9cf17aa26e2d5
                     break;
 
                 case VIEWTYPE_LOADMORE:
@@ -982,12 +847,12 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
         TextView commentsCountView;
         LinearLayout textContainer;
         Button commentsButton;
-<<<<<<< HEAD
+
         //#0
         ImageButton newstrendButton;
-=======
+
         Button starButton;//#luke0803
->>>>>>> 93384a83573aabc320f2dc4578f9cf17aa26e2d5
+
     }
 
 

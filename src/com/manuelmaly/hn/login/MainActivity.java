@@ -47,7 +47,7 @@ import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.SystemService;
 import com.googlecode.androidannotations.annotations.ViewById;
-import com.manuelmaly.hn.AboutActivity_;
+import com.manuelmaly.hn.AboutActivity;
 import com.manuelmaly.hn.App;
 import com.manuelmaly.hn.ArticleReaderActivity;
 import com.manuelmaly.hn.ArticleReaderActivity_;
@@ -55,14 +55,9 @@ import com.manuelmaly.hn.BaseListActivity;
 import com.manuelmaly.hn.CommentsActivity;
 import com.manuelmaly.hn.CommentsActivity_;
 import com.manuelmaly.hn.R;
+import com.manuelmaly.hn.SearchActivity_;
 import com.manuelmaly.hn.Settings;
 import com.manuelmaly.hn.SettingsActivity;
-import com.manuelmaly.hn.searchActivity_;
-import com.manuelmaly.hn.R.color;
-import com.manuelmaly.hn.R.drawable;
-import com.manuelmaly.hn.R.id;
-import com.manuelmaly.hn.R.layout;
-import com.manuelmaly.hn.R.string;
 import com.manuelmaly.hn.model.HNFeed;
 import com.manuelmaly.hn.model.HNPost;
 import com.manuelmaly.hn.parser.BaseHTMLParser;
@@ -215,7 +210,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
         aboutButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, AboutActivity_.class));
+                startActivity(new Intent(MainActivity.this, AboutActivity.class));
                 popupWindow.dismiss();
             }
         });
@@ -235,7 +230,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
             public void onClick(View v) {
             	//mFeed
             	Intent intent = new Intent();
-                intent.setClass(MainActivity.this, searchActivity_.class);
+                intent.setClass(MainActivity.this, SearchActivity_.class);
                 startActivityForResult(intent, ACTIVITY_IDENTIFIER);
                 popupWindow.dismiss();
             }
