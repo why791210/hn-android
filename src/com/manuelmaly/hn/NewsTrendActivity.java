@@ -75,9 +75,11 @@ public class NewsTrendActivity extends BaseListActivity implements ITaskFinished
 	ListView newstrend_list;
 
 	public static final String EXTRA_HNPOST = "HNPOST";
+	private final int MINUTE_MAP_SIZE = 60;
+	private final int HOUR_MAP_SIZE = 24;
 	ArrayList<String> list = new ArrayList<String>();
-	Map<Integer, Integer> minuteAgo = new Hashtable<Integer, Integer>();
-	Map<Integer, Integer> hourAgo = new Hashtable<Integer, Integer>();
+	Map<Integer, Integer> minuteAgo = new Hashtable<Integer, Integer>(MINUTE_MAP_SIZE);
+	Map<Integer, Integer> hourAgo = new Hashtable<Integer, Integer>(HOUR_MAP_SIZE);
 	Map<Integer, Integer> dayAgo = new Hashtable<Integer, Integer>();
 	String[] timeAgo;
 	Integer[] drawhours = new Integer[24];
@@ -89,6 +91,13 @@ public class NewsTrendActivity extends BaseListActivity implements ITaskFinished
     
 	@AfterViews
 	public void init() {
+		// init map
+		for(int i=1;i<=MINUTE_MAP_SIZE;i++){
+			minuteAgo.put(Integer.valueOf(i), Integer.valueOf(0));
+		}
+		for(int i=1;i<=HOUR_MAP_SIZE;i++){
+			hourAgo.put(Integer.valueOf(i), Integer.valueOf(0));
+		}		
 		//get mPost from MainActivity
 		mPost = (HNPost) getIntent().getSerializableExtra(EXTRA_HNPOST);
 		
@@ -213,25 +222,16 @@ public class NewsTrendActivity extends BaseListActivity implements ITaskFinished
 					key = Integer.valueOf(timeAgostr.substring(1, endofnum-1));
 					value = minuteAgo.get(key);
 					// process minute
-					if(value == null)
-						minuteAgo.put(key, 0) ;
-					else
-						value = Integer.valueOf(value.intValue() + 1);
+					minuteAgo.put(key, Integer.valueOf(value.intValue() + 1));
 					
 					// process hour
 					key = Integer.valueOf(1);
 					value = hourAgo.get(key);
-					if(value == null)
-						hourAgo.put(key, 0) ;
-					else
-						value = Integer.valueOf(value.intValue() + 1);
+					hourAgo.put(key, Integer.valueOf(value.intValue() + 1));
 					
 					// process day
-					value = dayAgo.get(key);
-					if(value == null)
-						dayAgo.put(key, 0) ;
-					else
-						value = Integer.valueOf(value.intValue() + 1);					
+					//value = dayAgo.get(key);
+					//value = Integer.valueOf(value.intValue() + 1);					
 				}
 				else if(timeAgostr.contains("hour"))
 				{
@@ -241,18 +241,12 @@ public class NewsTrendActivity extends BaseListActivity implements ITaskFinished
 					// process hour
 					key = Integer.valueOf(timeAgostr.substring(1, endofnum-1));
 					value = hourAgo.get(key);
-					if(value == null)
-						hourAgo.put(key, 0) ;
-					else
-						value = Integer.valueOf(value.intValue() + 1);
+					hourAgo.put(key, Integer.valueOf(value.intValue() + 1));
 					
 					// process day
-					key = Integer.valueOf(1);
-					value = dayAgo.get(key);
-					if(value == null)
-						dayAgo.put(key, 0) ;
-					else
-						value = Integer.valueOf(value.intValue() + 1);						
+					//key = Integer.valueOf(1);
+					//value = dayAgo.get(key);
+					//value = Integer.valueOf(value.intValue() + 1);						
 				}
 				else
 				{
