@@ -12,6 +12,7 @@ import java.util.Map;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ViewById;
+import com.jjoe64.graphview.CustomLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphViewSeries;
@@ -71,8 +72,8 @@ public class NewsTrendActivity extends BaseListActivity implements ITaskFinished
 	@ViewById(R.id.graph)
 	LinearLayout gragh;
 	
-	@ViewById(R.id.newstrend_list)
-	ListView newstrend_list;
+	//@ViewById(R.id.newstrend_list)
+	//ListView newstrend_list;
 
 	public static final String EXTRA_HNPOST = "HNPOST";
 	private final int MINUTE_MAP_SIZE = 60;
@@ -82,7 +83,6 @@ public class NewsTrendActivity extends BaseListActivity implements ITaskFinished
 	Map<Integer, Integer> hourAgo = new Hashtable<Integer, Integer>(HOUR_MAP_SIZE);
 	Map<Integer, Integer> dayAgo = new Hashtable<Integer, Integer>();
 	String[] timeAgo;
-	Integer[] drawhours = new Integer[24];
    
     HNPost mPost;
     HNPostComments mComments;
@@ -202,10 +202,7 @@ public class NewsTrendActivity extends BaseListActivity implements ITaskFinished
     public void drawGraphView() {
     	
     	mCommentsCache = mComments.getComments();
-    	
     	timeAgo = new String[mCommentsCache.size()];
-    	
-    	drawhours = new Integer[]{0};
     	
     	// XX minute(s)/hour(s)/day(s) ago
 		if (mCommentsCache != null) {
@@ -270,33 +267,35 @@ public class NewsTrendActivity extends BaseListActivity implements ITaskFinished
             }
 		});*/
 		// (Integer [])((Hashtable)hourAgo).values().toArray()
-    	newstrend_list.setAdapter(new ArrayAdapter<Integer>(this,
-    			 android.R.layout.simple_list_item_1, new ArrayList<Integer>(hourAgo.values()) ));
-    	
-    	newstrend_list.setTextFilterEnabled(true);
-    	
-    	/*GraphViewSeries exampleSeries = new GraphViewSeries(new GraphViewData[] {
-    	    	for(int i = 0; i < mCommentsCache.size(); i++)
-    	    	{
-    	    		new GraphViewData(i, mCommentsCache.get(i).getTimeAgo());
-    	    	}
-				new GraphViewData(1, 2.0d)
-				//, new GraphViewData(2, 1.5d)
-		});
+		/*newstrend_list.setAdapter(new ArrayAdapter<Integer>(this,
+				android.R.layout.simple_list_item_1, new ArrayList<Integer>(
+						hourAgo.values())));
 
-		GraphView graphView = new LineGraphView(
-				this // context
-				, "GraphViewDemo" // heading
-				);
-		graphView.addSeries(exampleSeries); // data
-		graphView.getGraphViewStyle().setNumHorizontalLabels(10);
+		newstrend_list.setTextFilterEnabled(true);*/
+
+		GraphViewData[] data = new GraphViewData[24];
+
+		for(int i = 0; i < 24; i++)
+		{
+			data[i] = new GraphViewData(i + 1, hourAgo.get(i + 1));
+		}
+		//data[2] = new GraphViewData(2, (float)hourAgo.get(2));
+		//data[3] = new GraphViewData(3, (float)hourAgo.get(3));
+
+
+		GraphView graphView = new LineGraphView(this // context
+				, "News Trend" // heading
+		);
+
+		graphView.addSeries(new GraphViewSeries(data)); // data
+		graphView.getGraphViewStyle().setNumHorizontalLabels(4);
 		graphView.getGraphViewStyle().setNumVerticalLabels(5);
-		graphView.setViewPort(5, 10);
+		//graphView.setViewPort(5, 10);
 		graphView.setScrollable(true);
 		//graphView.setScalable(true);  
 		//graphView.setDrawBackground(true);
 
-		gragh.addView(graphView);*/
+		gragh.addView(graphView);
     	
     }
     
