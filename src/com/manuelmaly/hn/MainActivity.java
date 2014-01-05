@@ -114,7 +114,9 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
 
         mEmptyListPlaceholder.setTypeface(FontHelper.getComfortaa(this, true));
         
-        loadIntermediateFeedFromStore();
+        
+        
+        loadIntermediateFeedFromStore(); 
         startFeedLoading();
     }
 
