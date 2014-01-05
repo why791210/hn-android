@@ -396,7 +396,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
         }
     }
 
-    class PostsAdapter extends BaseAdapter {
+ class PostsAdapter extends BaseAdapter {
 
         private static final int VIEWTYPE_POST = 0;
         private static final int VIEWTYPE_LOADMORE = 1;
@@ -446,8 +446,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
                         PostViewHolder holder = new PostViewHolder();
                         holder.titleView = (TextView) convertView.findViewById(R.id.main_list_item_title);
                         holder.urlView = (TextView) convertView.findViewById(R.id.main_list_item_url);
-                        holder.textContainer = (LinearLayout) convertView
-                            .findViewById(R.id.main_list_item_textcontainer);
+                        holder.textContainer = (LinearLayout) convertView.findViewById(R.id.main_list_item_textcontainer);
                         holder.commentsButton = (Button) convertView.findViewById(R.id.main_list_item_comments_button);
                         holder.commentsButton.setTypeface(FontHelper.getComfortaa(MainActivity.this, false));
                         holder.pointsView = (TextView) convertView.findViewById(R.id.main_list_item_points);

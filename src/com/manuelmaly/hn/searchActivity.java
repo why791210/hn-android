@@ -95,7 +95,7 @@ public class searchActivity extends Activity implements ITaskFinishedHandler<HNF
     }
     //why791210_102522113
     private boolean connect_Internet()
-    {
+    { 
     	boolean result = false;
     	ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE); 
     	NetworkInfo info=connManager.getActiveNetworkInfo();
