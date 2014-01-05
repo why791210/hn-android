@@ -255,7 +255,11 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
 				mFeed.clearPost();
 				// 讀檔指定給mFavorite，取出放進mFeed
 				mFeed.addPosts(mFavorite);
+				
+				
+				
 				showFeed(mFeed);
+				
 				popupWindow.dismiss();
 			}
 		});
@@ -582,6 +586,10 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
         		//#luke0803
         		holder.starButton.setOnClickListener(new OnClickListener() {
         			public void onClick(View v) {
+        				AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);	//main是class name
+        				builder.setTitle("加入到我的最愛成功");
+        				builder.setPositiveButton("OK", null);
+        				builder.show();
         				//add HNPost to mFavorite list
         				String filename = "MyFavorite";
         				
