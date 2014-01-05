@@ -1,3 +1,8 @@
+// Create by CalvinChang 
+// Login Id : CalvinChang 
+// Student Id : 101552030
+// Tag : #CalvinChang + number
+
 package com.manuelmaly.hn.server;
 
 import java.util.HashMap;
@@ -9,7 +14,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 
 import android.content.Context;
 
-// A Command class for json  # Calvin Chang
+// A Command class for json  #CalvinChang01
 public class JsonStringDownloadCommand extends BaseHTTPCommand<String> {
 
     public JsonStringDownloadCommand(String url, HashMap<String, String> queryParams, RequestType type, boolean notifyFinishedBroadcast,

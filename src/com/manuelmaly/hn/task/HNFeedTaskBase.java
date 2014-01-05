@@ -1,3 +1,8 @@
+// Modify by CalvinChang 
+// Login Id : CalvinChang 
+// Student Id : 101552030
+// Tag : #CalvinChang + number
+
 package com.manuelmaly.hn.task;
 
 import java.util.HashMap;
@@ -28,7 +33,7 @@ public abstract class HNFeedTaskBase extends BaseTask<HNFeed> {
         super(notificationBroadcastIntentID, taskCode);
     }
     
-    // header type, default is HTML
+    // header type, default is HTML #CalvinChang01
     protected IAPICommand.HeaderType mHeaderType = IAPICommand.HeaderType.HTML;
     
     protected IAPICommand.HeaderType getHeaderType(){
@@ -94,7 +99,7 @@ public abstract class HNFeedTaskBase extends BaseTask<HNFeed> {
 
     }
 
-    // TaskRunnable for Search # Calvin Chang
+    // Create TaskRunnable for Search #CalvinChang02
     class HNFeedSearchTaskRunnable extends CancelableRunnable {
 
     	JsonStringDownloadCommand mFeedDownload;

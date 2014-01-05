@@ -1,16 +1,27 @@
+// Modify by CalvinChang, why791210, t800516 
+// Login Id : CalvinChang, why791210, t800516
+// Student Id : 101552030
+// Tag : #CalvinChang + number
+//       #why791210
+//		 #t800516
+
 package com.manuelmaly.hn;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
+import android.R.array;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -44,7 +55,7 @@ import com.manuelmaly.hn.model.HNFeed;
 import com.manuelmaly.hn.model.HNPost;
 import com.manuelmaly.hn.parser.BaseHTMLParser;
 import com.manuelmaly.hn.server.HNCredentials;
-import com.manuelmaly.hn.task.HNFeedTaskHotnews;
+
 import com.manuelmaly.hn.task.HNFeedTaskLoadMore;
 import com.manuelmaly.hn.task.HNFeedTaskMainFeed;
 import com.manuelmaly.hn.task.HNVoteTask;
@@ -95,9 +106,12 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
     private static final int ACTIVITY_IDENTIFIER = 1;
     private static final int TASKCODE_LOAD_HOTNEWS = 30;
     
+    private static final ArrayList<HNPost> myStringList = new ArrayList<HNPost>();  //#yincyee
+    
+    
     private static final String LIST_STATE = "listState";
     private Parcelable mListState = null;
-    // #Calvin Chang
+    // #CalvinChang01
     private boolean mIsSearchResult = false;
     @AfterViews
     public void init() {
@@ -136,6 +150,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
         if (refreshFontSizes())
         	mPostsListAdapter.notifyDataSetChanged();
         
+     // #CalvinChang02
         // load search result
         if(mIsSearchResult)
         {
@@ -232,6 +247,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
         popupWindow.update(moreContentView.getMeasuredWidth(), moreContentView.getMeasuredHeight());
     }
     
+    // #CalvinChang03
     @Override 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {	
       super.onActivityResult(requestCode, resultCode, data); 
@@ -338,7 +354,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
 		hotnews_param.put("boosts[fields][num_comments]", "0.15");
     	hotnews_param.put("boosts[functions][pow(2,div(div(ms(create_ts,NOW),3600000),72))]", "200.00");
     	hotnews_param.put("pretty_print", "true");
-        HNFeedTaskHotnews.start(this, this, TASKCODE_LOAD_HOTNEWS, hotnews_param);
+       // HNFeedTaskHotnews.start(this, this, TASKCODE_LOAD_HOTNEWS, hotnews_param);
         mActionbarRefresh.setImageResource(R.drawable.refresh);
         
         mActionbarRefreshProgress.setVisibility(View.VISIBLE);
@@ -441,6 +457,9 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
+        	        	
+        	
+        	
             switch (getItemViewType(position)) {
                 case VIEWTYPE_POST:
                     if (convertView == null) {
@@ -463,6 +482,23 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
                     PostViewHolder holder = (PostViewHolder) convertView.getTag();
                     holder.titleView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, mFontSizeTitle);
                     holder.titleView.setText(item.getTitle());
+                    //#yincyee
+                    
+                    if(myStringList.contains(getItem(position)))
+                    {      
+                    	for (HNPost check : myStringList)
+                    	if(check.getTitle() == (item.getTitle()))
+                    	{
+                    		holder.titleView.setBackgroundColor(Color.GRAY);
+                    		//view.setTextColor(getResources().getColor(android.R.color.darker_gray));
+                    		
+                    	}      
+                    	//else
+                    		//break;
+                    }
+                    else
+                    	holder.titleView.setBackgroundColor(0);
+                    
                     holder.urlView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, mFontSizeDetails);
                     holder.urlView.setText(item.getURLDomain());
                     holder.pointsView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, mFontSizeDetails);
@@ -486,9 +522,16 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
                     });
                     holder.textContainer.setOnClickListener(new OnClickListener() {
                         public void onClick(View v) {
-                            if (Settings.getHtmlViewer(MainActivity.this).equals(
-                                getString(R.string.pref_htmlviewer_browser)))
+                        	 //#yincyee
+                        	myStringList.add(getItem(position));
+                        	
+                            if (Settings.getHtmlViewer(MainActivity.this).equals(getString(R.string.pref_htmlviewer_browser)))  
+                            {
+                            	//myStringList.add(getItem(position));
+                            	//holder.titleView.setBackgroundColor(Color.BLUE);
+                            	
                                 openURLInBrowser(getArticleViewURL(getItem(position)), MainActivity.this);
+                            }
                             else
                                 openPostInApp(getItem(position), null, MainActivity.this);
                         }
@@ -645,6 +688,7 @@ public class MainActivity extends BaseListActivity implements ITaskFinishedHandl
                     openPostInApp(mPost, getItem(item).toString(), MainActivity.this);
                     break;
                 case 5:
+                	
                     openURLInBrowser(getArticleViewURL(mPost), MainActivity.this);
                     break;
                 default:
