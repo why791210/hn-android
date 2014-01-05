@@ -68,7 +68,8 @@
         <activity android:name=".login.LoginActivity_" android:label="@string/credentials" android:theme="@android:style/Theme.Dialog">
         </activity>
         <activity android:name="SearchActivity_"></activity>
-        <activity android:name=".NewsTrendActivity_">
+        <activity android:name=".NewsTrendActivity_"
+                  android:screenOrientation="landscape">
         </activity>
     </application>
 

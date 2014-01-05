@@ -29,6 +29,8 @@ import com.manuelmaly.hn.util.FileUtil;
 import com.manuelmaly.hn.util.FontHelper;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.Paint.Align;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.util.Linkify;
@@ -260,12 +262,7 @@ public class NewsTrendActivity extends BaseListActivity implements ITaskFinished
 				}
 			}
 		}
-		/*
-		Collections.sort(hourAgo,new Comparator<Integer>(){
-			public int compare(Integer o1, Integer o2) {
-                return o1 - o2;
-            }
-		});*/
+
 		// (Integer [])((Hashtable)hourAgo).values().toArray()
 		/*newstrend_list.setAdapter(new ArrayAdapter<Integer>(this,
 				android.R.layout.simple_list_item_1, new ArrayList<Integer>(
@@ -273,31 +270,62 @@ public class NewsTrendActivity extends BaseListActivity implements ITaskFinished
 
 		newstrend_list.setTextFilterEnabled(true);*/
 
-		GraphViewData[] data = new GraphViewData[24];
-
-		for(int i = 0; i < 24; i++)
+		GraphViewData[] data = new GraphViewData[25];
+		data[0] = new GraphViewData(0, 0);
+		for(int i = 1; i < 25; i++)
 		{
-			data[i] = new GraphViewData(i + 1, hourAgo.get(i + 1));
+			data[i] = new GraphViewData(i, hourAgo.get(i));
 		}
-		//data[2] = new GraphViewData(2, (float)hourAgo.get(2));
-		//data[3] = new GraphViewData(3, (float)hourAgo.get(3));
-
 
 		GraphView graphView = new LineGraphView(this // context
-				, "News Trend" // heading
+				, "News Trend (comments / hours)" // heading
 		);
 
-		graphView.addSeries(new GraphViewSeries(data)); // data
-		graphView.getGraphViewStyle().setNumHorizontalLabels(4);
-		graphView.getGraphViewStyle().setNumVerticalLabels(5);
-		//graphView.setViewPort(5, 10);
-		graphView.setScrollable(true);
-		//graphView.setScalable(true);  
-		//graphView.setDrawBackground(true);
+		graphView.setCustomLabelFormatter(new CustomLabelFormatter() {
+			@Override
+			public String formatLabel(double value, boolean isValueX) {
+				// set X-axis
+				if (isValueX) {
+					if (value == 0) {
+						return "times ago";
+					} else if (value == 5) {
+						return "5hr";
+					} else if (value == 15) {
+						return "15hr";
+					} else if (value == 24) {
+						return "24hr";
+					} else {
+						return "";
+					}
+				}
+				// set Y-axis
+				if (!isValueX) {
 
+					if (value == 0) {
+						return "0";
+					} else if (value == Collections.max(hourAgo.values())) {
+						return Collections.max(hourAgo.values()).toString();
+					} else {
+						return "";
+					}
+				}
+				return null;
+			}
+		});
+
+		graphView.addSeries(new GraphViewSeries(data));
+		graphView.getGraphViewStyle().setNumHorizontalLabels(25);
+		graphView.getGraphViewStyle().setNumVerticalLabels(Collections.max(hourAgo.values()) + 1);
+		// graphView.setViewPort(5, 10);
+		// graphView.setScrollable(true);
+		// graphView.setScalable(true);
+		// graphView.setDrawBackground(true);
+		graphView.getGraphViewStyle().setVerticalLabelsAlign(Align.CENTER);
+		graphView.getGraphViewStyle().setTextSize(15);
+		
 		gragh.addView(graphView);
-    	
-    }
+
+	}
     
 	public NewsTrendActivity() {	
 	}
